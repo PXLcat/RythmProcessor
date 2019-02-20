@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.329
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RythmProcessor", "RythmProcessor\RythmProcessor.csproj", "{956DA1C2-A32C-4045-931C-741F17D43DD8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{956DA1C2-A32C-4045-931C-741F17D43DD8}.Debug|x86.ActiveCfg = Debug|x86
+		{956DA1C2-A32C-4045-931C-741F17D43DD8}.Debug|x86.Build.0 = Debug|x86
+		{956DA1C2-A32C-4045-931C-741F17D43DD8}.Release|x86.ActiveCfg = Release|x86
+		{956DA1C2-A32C-4045-931C-741F17D43DD8}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F034ADBB-0535-4C31-B40C-A3AEF36CCAEE}
+	EndGlobalSection
+EndGlobal
