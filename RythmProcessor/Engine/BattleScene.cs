@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using RythmProcessor;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,16 @@ namespace Engine
         Texture2D buttonUnclicked;
         Texture2D buttonClicked;
 
+        Texture2D playButton;
+        Texture2D pauseButton;
+        bool playMusic; //false pause, true play
+
+        Vector2 playPauseOrigin = new Vector2(200, 100); //coin bas gauche
+        Rectangle playPauseZone;
+
+        Song testMusic; //externaliser ce qui est musique
+
+
         public BattleScene(MainGame mG) : base(mG)
         {
 
@@ -23,7 +34,13 @@ namespace Engine
             mainGame.IsMouseVisible = true;
             buttonUnclicked = mainGame.Content.Load<Texture2D>("buttonUnclicked");
             buttonClicked = mainGame.Content.Load<Texture2D>("buttonClicked");
-            
+            playButton = mainGame.Content.Load<Texture2D>("playButton");
+            pauseButton = mainGame.Content.Load<Texture2D>("pauseButton");
+
+            testMusic = mainGame.Content.Load<Song>("musique_normal");
+
+
+            playPauseZone = new Rectangle((int)playPauseOrigin.X, (int)playPauseOrigin.Y - playButton.Height, playButton.Width, playButton.Height);
 
             //snowMap = new IsometricMap(); // pas super
             //snowMap.Load(mainGame.Content);
@@ -46,13 +63,38 @@ namespace Engine
         }
         public override void Update(GameTime gameTime, float deltaTime)
         {
-            base.Update(gameTime, deltaTime);
-            List<InputType> playerInputs = Input.DefineInputs(ref mainGame.gameState.oldKbState);
+            base.Update(gameTime, deltaTime); //la récupération des inputs se fait dans la méthode de la classe mère
+
+            if (playerInputs.Contains(InputType.LEFT_CLICK))
+            {
+                if (playPauseZone.Contains(cursorPosition))
+                {
+                    playMusic = !playMusic;
+                    if (playMusic)
+                    {
+                        StartMusic();
+                    }
+                    else
+                    {
+                        StopMusic();
+                    }
+                }
+            }
             //Player.Instance.currentCharacter.mapRepresentation.Update(playerInputs, deltaTime);
 
 
             //snowMap.Update();
         }
+
+        private void StartMusic()
+        {
+            MediaPlayer.Play(testMusic);
+        }
+        private void StopMusic()
+        {
+            MediaPlayer.Stop();
+        }
+
         protected void DrawSceneToTexture(RenderTarget2D renderTarget, GameTime gameTime)
         {
             // Set the render target
@@ -65,8 +107,18 @@ namespace Engine
 
             mainGame.spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null); //SamplerState.PointClamp => Permet de resize du pixel art sans blur
 
-            Tools.DrawTiled(mainGame.spriteBatch, buttonUnclicked, 1, 1, new Vector2(100, 100));
-
+            mainGame.spriteBatch.Draw(buttonUnclicked, new Vector2(100, 100), Color.White);
+            Texture2D toDrawButton = null;
+            if (playMusic)
+            {
+                toDrawButton = pauseButton;
+            }
+            else
+            {
+                toDrawButton = playButton;
+            }
+            mainGame.spriteBatch.Draw(toDrawButton, new Rectangle((int)playPauseOrigin.X, (int)playPauseOrigin.Y, toDrawButton.Width, toDrawButton.Height),
+                    null, Color.White, 0, new Vector2(0, toDrawButton.Height), SpriteEffects.None, 1);
 
             //snowMap.Draw(mainGame.spriteBatch);
             //Player.Instance.currentCharacter.mapRepresentation.Draw(mainGame.spriteBatch);

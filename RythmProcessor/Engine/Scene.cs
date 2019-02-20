@@ -94,6 +94,7 @@ namespace Engine
                 cursorPosition = Mouse.GetState().Position;
             }
 
+            cursorPosition = new Point(cursorPosition.X/zoom, cursorPosition.Y/zoom);
 
 #if DEBUG
             mouse = Mouse.GetState();
