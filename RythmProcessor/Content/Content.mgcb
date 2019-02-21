@@ -44,11 +44,11 @@
 /processorParam:TextureFormat=Compressed
 /build:KenPixelBlocks.spritefont
 
-#begin musique_normal.wav
+#begin lionhearted.wav
 /importer:WavImporter
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:musique_normal.wav
+/build:lionhearted.wav
 
 #begin pauseButton.png
 /importer:TextureImporter
@@ -61,6 +61,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:pauseButton.png
+
+#begin paynomind.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:paynomind.wav
 
 #begin playButton.png
 /importer:TextureImporter

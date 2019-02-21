@@ -35,10 +35,19 @@ namespace Engine
             List<InputType> inputs = new List<InputType>();
             MouseState newMouseState = Mouse.GetState();
 
-            if ((newMouseState.LeftButton == ButtonState.Pressed) && newMouseState != oldMouseState)
+            if (newMouseState.LeftButton == ButtonState.Pressed)
             {
-                inputs.Add(InputType.LEFT_CLICK);
-                Debug.Write("input clic");
+                if (newMouseState == oldMouseState) //TODO penser à faire pareil pour les input clavier
+                {
+                    inputs.Add(InputType.LEFT_CLICK);
+                    Debug.Write("input long clic");
+                }
+                else
+                {
+                    inputs.Add(InputType.SINGLE_LEFT_CLICK);
+                    Debug.Write("input clic");
+                }
+
             }
             
             oldMouseState = newMouseState;
@@ -146,6 +155,7 @@ namespace Engine
         RETURNTOMENU,
         DO_NOTHING,
         RESET_POSE,
+        SINGLE_LEFT_CLICK,
         LEFT_CLICK
     }
     public enum InputMethod
