@@ -59,6 +59,7 @@
     <Compile Include="Engine\IsometricMap.cs" />
     <Compile Include="Engine\Player.cs" />
     <Compile Include="Engine\Scene.cs" />
+    <Compile Include="Engine\SongDTO.cs" />
     <Compile Include="Engine\Tiles\ModelTile.cs" />
     <Compile Include="Engine\Tiles\TileGround.cs" />
     <Compile Include="Engine\Tools.cs" />
@@ -92,6 +93,9 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
     <None Include="Content\charactersList.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\testpnm.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />

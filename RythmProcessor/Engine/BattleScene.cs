@@ -1,12 +1,16 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Engine.CommonImagery;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
+using Newtonsoft.Json;
 using RythmProcessor;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace Engine
 {
@@ -29,6 +33,10 @@ namespace Engine
 
         Song testMusic; //externaliser ce qui est musique
 
+        SongDTO jsonTempoFile;
+        Timer bpmTimer;
+
+        int songTimer;
 
         public BattleScene(MainGame mG) : base(mG)
         {
@@ -36,6 +44,19 @@ namespace Engine
         }
         public override void Load()
         {
+            songTimer = 0;
+
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore, //attention dino danger
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            StreamReader sr = new StreamReader("./Content/testpnm.json");//TODO externaliser
+            String jsonFile = sr.ReadToEnd();
+            jsonTempoFile = JsonConvert.DeserializeObject<SongDTO>(jsonFile, settings);
+
+
             mainGame.IsMouseVisible = true;
             buttonUnclicked = mainGame.Content.Load<Texture2D>("buttonUnclicked");
             buttonClicked = mainGame.Content.Load<Texture2D>("buttonClicked");
@@ -95,8 +116,9 @@ namespace Engine
             {
                 inputButtonClicked = false;
             }
-                //Player.Instance.currentCharacter.mapRepresentation.Update(playerInputs, deltaTime);
+            //Player.Instance.currentCharacter.mapRepresentation.Update(playerInputs, deltaTime);
 
+            tempoMatch = jsonTempoFile.RythmLine.Contains<int>(songTimer);
 
                 //snowMap.Update();
             }
@@ -104,7 +126,20 @@ namespace Engine
         private void StartMusic()
         {
             MediaPlayer.Play(testMusic);
+            int divisionDeTemps = 4;//TODO à mettre dans le json! CF EDITEURRYTHME timerBPM.Interval = secFromBpm / 4;
+            bpmTimer = new Timer(60000 / jsonTempoFile.BPM / divisionDeTemps); //à mettre peut-être en dehors du Start
+            //TODO vérifier que le Timer est indépendant de l'Update
+            bpmTimer.Elapsed += OnTimedEvent;
+            bpmTimer.AutoReset = true;
+            bpmTimer.Start();
+
         }
+
+        private void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            songTimer++;
+        }
+
         private void StopMusic()
         {
             MediaPlayer.Stop();
@@ -138,6 +173,9 @@ namespace Engine
             }
             mainGame.spriteBatch.Draw(toDrawButton, new Rectangle((int)playPauseOrigin.X, (int)playPauseOrigin.Y, toDrawButton.Width, toDrawButton.Height),
                     null, Color.White, 0, new Vector2(0, toDrawButton.Height), SpriteEffects.None, 1);
+
+            mainGame.spriteBatch.DrawString(Fonts.Instance.kenPixel16, songTimer.ToString(), new Vector2(0, 50), Color.White);
+
 
             //snowMap.Draw(mainGame.spriteBatch);
             //Player.Instance.currentCharacter.mapRepresentation.Draw(mainGame.spriteBatch);
