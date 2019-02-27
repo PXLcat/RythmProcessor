@@ -37,7 +37,7 @@ namespace Engine
 
             if (newMouseState.LeftButton == ButtonState.Pressed)
             {
-                if (newMouseState == oldMouseState) //TODO penser à faire pareil pour les input clavier
+                if (newMouseState == oldMouseState)
                 {
                     inputs.Add(InputType.LEFT_CLICK);
                     Debug.Write("input long clic");

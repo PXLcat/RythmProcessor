@@ -26,6 +26,8 @@ namespace Engine
         Texture2D pauseButton;
         bool playMusic; //false pause, true play
 
+        Texture2D barreHorizontale;
+
         Vector2 playPauseOrigin = new Vector2(200, 100); //coin bas gauche
         Rectangle playPauseZone;
 
@@ -62,9 +64,10 @@ namespace Engine
             buttonClicked = mainGame.Content.Load<Texture2D>("buttonClicked");
             playButton = mainGame.Content.Load<Texture2D>("playButton");
             pauseButton = mainGame.Content.Load<Texture2D>("pauseButton");
+            barreHorizontale = mainGame.Content.Load<Texture2D>("barreHoriz");
 
             testMusic = mainGame.Content.Load<Song>("paynomind");
-
+            
 
             playPauseZone = new Rectangle((int)playPauseOrigin.X, (int)playPauseOrigin.Y - playButton.Height, playButton.Width, playButton.Height);
             inputButtonZone = new Rectangle((int)inputButtonOrigin.X, (int)inputButtonOrigin.Y, buttonUnclicked.Width, buttonUnclicked.Height);
@@ -73,6 +76,7 @@ namespace Engine
             //snowMap.Load(mainGame.Content);
 
             zoom = 2;
+
 
 
             //Player : 
@@ -156,6 +160,8 @@ namespace Engine
             //__________________CONTENU DU DRAW "CLASSIQUE"_____________
 
             mainGame.spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null); //SamplerState.PointClamp => Permet de resize du pixel art sans blur
+
+            Tools.DrawTiled(mainGame.spriteBatch, barreHorizontale, new Vector2(0,20),30) ;
 
             mainGame.spriteBatch.Draw(inputButtonClicked?buttonClicked: buttonUnclicked, inputButtonOrigin, Color.White);
 

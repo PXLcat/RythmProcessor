@@ -20,8 +20,8 @@ namespace Engine
         /// <param name="verticalTilesNb">Le nombre de fois où le motif se répète verticalement</param>
         /// <param name="initalPosition">Le coin haut gauche du motif</param>
         /// <param name="horizontalFlip">Initialement à false. Applique un effet "miroir"</param>
-        public static void DrawTiled(SpriteBatch sb, Texture2D texture, int horizontalTilesNb,
-            int verticalTilesNb, Vector2 initalPosition, bool horizontalFlip = false)
+        public static void DrawTiled(SpriteBatch sb, Texture2D texture, Vector2 initalPosition, 
+            int horizontalTilesNb=1 , int verticalTilesNb=1,  bool horizontalFlip = false)
         {
             for (int i = 0; i < verticalTilesNb; i++)
             {
