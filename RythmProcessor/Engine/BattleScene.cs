@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
 using Newtonsoft.Json;
 using RythmProcessor;
+using RythmProcessor.Engine;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,20 +17,32 @@ namespace Engine
 {
     public class BattleScene : Scene
     {
+        Texture2D barreHorizontale;
         Texture2D buttonUnclicked;
         Texture2D buttonClicked;
+        Texture2D playButton;
+        Texture2D pauseButton;
+        Texture2D rythmClicked;
+        Texture2D rythmUnclicked;
+
         Vector2 inputButtonOrigin = new Vector2(100, 100);
+        Vector2 playPauseOrigin = new Vector2(200, 100); //coin bas gauche
+        Rectangle playPauseZone;
+        int hauteurBarreRythme;
+
         Rectangle inputButtonZone;
         bool inputButtonClicked;
 
-        Texture2D playButton;
-        Texture2D pauseButton;
+        int currentBeat;
+        int divisionDeTemps;
+
+
         bool playMusic; //false pause, true play
 
-        Texture2D barreHorizontale;
+        
 
-        Vector2 playPauseOrigin = new Vector2(200, 100); //coin bas gauche
-        Rectangle playPauseZone;
+        
+        
 
         bool tempoMatch;
 
@@ -38,7 +51,7 @@ namespace Engine
         SongDTO jsonTempoFile;
         Timer bpmTimer;
 
-        int songTimer;
+        List<Beat> beats;
 
         public BattleScene(MainGame mG) : base(mG)
         {
@@ -46,7 +59,18 @@ namespace Engine
         }
         public override void Load()
         {
-            songTimer = 0;
+            buttonUnclicked = mainGame.Content.Load<Texture2D>("buttonUnclicked");
+            buttonClicked = mainGame.Content.Load<Texture2D>("buttonClicked");
+            playButton = mainGame.Content.Load<Texture2D>("playButton");
+            pauseButton = mainGame.Content.Load<Texture2D>("pauseButton");
+            barreHorizontale = mainGame.Content.Load<Texture2D>("barreHoriz");
+            rythmClicked = mainGame.Content.Load<Texture2D>("rythmClicked");
+            rythmUnclicked = mainGame.Content.Load<Texture2D>("rythmUnclicked");
+
+            testMusic = mainGame.Content.Load<Song>("paynomind");
+
+            hauteurBarreRythme = 20;
+            currentBeat = 0;
 
             JsonSerializerSettings settings = new JsonSerializerSettings
             {
@@ -60,13 +84,9 @@ namespace Engine
 
 
             mainGame.IsMouseVisible = true;
-            buttonUnclicked = mainGame.Content.Load<Texture2D>("buttonUnclicked");
-            buttonClicked = mainGame.Content.Load<Texture2D>("buttonClicked");
-            playButton = mainGame.Content.Load<Texture2D>("playButton");
-            pauseButton = mainGame.Content.Load<Texture2D>("pauseButton");
-            barreHorizontale = mainGame.Content.Load<Texture2D>("barreHoriz");
 
-            testMusic = mainGame.Content.Load<Song>("paynomind");
+
+
             
 
             playPauseZone = new Rectangle((int)playPauseOrigin.X, (int)playPauseOrigin.Y - playButton.Height, playButton.Width, playButton.Height);
@@ -77,6 +97,11 @@ namespace Engine
 
             zoom = 2;
 
+            beats = new List<Beat>();
+            foreach (int i in jsonTempoFile.RythmLine)
+            {
+                beats.Add(new Beat(BeatType.RYTHM, i));
+            }
 
 
             //Player : 
@@ -122,7 +147,12 @@ namespace Engine
             }
             //Player.Instance.currentCharacter.mapRepresentation.Update(playerInputs, deltaTime);
 
-            tempoMatch = jsonTempoFile.RythmLine.Contains<int>(songTimer);
+            tempoMatch = jsonTempoFile.RythmLine.Contains<int>(currentBeat);
+
+            foreach (Beat b in beats)
+            {
+                b.Update(currentBeat, divisionDeTemps, mainGame.deltaTime);
+            }
 
                 //snowMap.Update();
             }
@@ -130,7 +160,7 @@ namespace Engine
         private void StartMusic()
         {
             MediaPlayer.Play(testMusic);
-            int divisionDeTemps = 4;//TODO à mettre dans le json! CF EDITEURRYTHME timerBPM.Interval = secFromBpm / 4;
+            divisionDeTemps = 4;//TODO à mettre dans le json! CF EDITEURRYTHME timerBPM.Interval = secFromBpm / 4;
             bpmTimer = new Timer(60000 / jsonTempoFile.BPM / divisionDeTemps); //à mettre peut-être en dehors du Start
             //TODO vérifier que le Timer est indépendant de l'Update
             bpmTimer.Elapsed += OnTimedEvent;
@@ -141,7 +171,7 @@ namespace Engine
 
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-            songTimer++;
+            currentBeat++;
         }
 
         private void StopMusic()
@@ -162,6 +192,11 @@ namespace Engine
             mainGame.spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null); //SamplerState.PointClamp => Permet de resize du pixel art sans blur
 
             Tools.DrawTiled(mainGame.spriteBatch, barreHorizontale, new Vector2(0,20),30) ;
+            foreach (Beat b in beats)
+            {
+                b.Draw(mainGame.spriteBatch,inputButtonClicked?rythmClicked:rythmUnclicked,hauteurBarreRythme,mainGame.graphics.PreferredBackBufferWidth,zoom); //TODO décalage sur Y selon que tempoMatch (2px plus bas) ou non
+            }
+
 
             mainGame.spriteBatch.Draw(inputButtonClicked?buttonClicked: buttonUnclicked, inputButtonOrigin, Color.White);
 
@@ -180,7 +215,7 @@ namespace Engine
             mainGame.spriteBatch.Draw(toDrawButton, new Rectangle((int)playPauseOrigin.X, (int)playPauseOrigin.Y, toDrawButton.Width, toDrawButton.Height),
                     null, Color.White, 0, new Vector2(0, toDrawButton.Height), SpriteEffects.None, 1);
 
-            mainGame.spriteBatch.DrawString(Fonts.Instance.kenPixel16, songTimer.ToString(), new Vector2(0, 50), Color.White);
+            mainGame.spriteBatch.DrawString(Fonts.Instance.kenPixel16, currentBeat.ToString(), new Vector2(0, 50), Color.White);
 
 
             //snowMap.Draw(mainGame.spriteBatch);

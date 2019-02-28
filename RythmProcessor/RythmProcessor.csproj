@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Engine\BattleScene.cs" />
+    <Compile Include="Engine\Beat.cs" />
     <Compile Include="Engine\CharacterClasses\Character.cs" />
     <Compile Include="Engine\CharacterClasses\CharactersListDTO.cs" />
     <Compile Include="Engine\CharacterClasses\MapRepresentation.cs" />

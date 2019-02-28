@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +12,7 @@ namespace RythmProcessor.Engine
     {
         public BeatType type;
         public int BeatNumber { get; set; }
-        public int DistanceFromRightBorder { get; set; }
+        public float DistanceFromRightBorder { get; set; }
         public bool Active { get; set; }
 
         //méthode destroy des beat du tableau de int pour que le foreach passe plus dans le début du json?
@@ -40,12 +42,30 @@ namespace RythmProcessor.Engine
         {
         }
 
-        public void Update()
+        public void Update(int currentBeat, int divisionDeTemps, float deltaTime)
         {
+            if (currentBeat > BeatNumber - divisionDeTemps * 4)
+            {
+                Active = true;
+            }
+            else if (BeatNumber < currentBeat- divisionDeTemps)
+            {
+                Active = false;
+            }
+
+            if (Active)
+            {
+                int vitesse = 2;  //comment/par rapport à quoi la définir? sûrement par rapport au tempo
+                DistanceFromRightBorder += vitesse * deltaTime;
+            }
         }
 
-        public void Draw()
+        public void Draw(SpriteBatch sb, Texture2D beatTexture, int hauteurBarre, int windowWidth, int zoom)
         {
+            if (Active)
+            {
+                sb.Draw(beatTexture, new Rectangle(windowWidth/zoom - (int)DistanceFromRightBorder, hauteurBarre, beatTexture.Width, beatTexture.Height), Color.White);
+            }
         }
 
 

@@ -73,7 +73,7 @@ namespace Engine.CommonImagery
         /// </summary>
         public void Update(float deltaTime)
         {
-            compteurFrame += 1 * deltaTime;//demander à Gaët si ça marche
+            compteurFrame += deltaTime;//demander à Gaët si ça marche 
             if (compteurFrame >= FrameSpeed)
             {
                 CurrentFrame++;
