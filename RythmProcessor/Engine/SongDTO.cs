@@ -10,6 +10,7 @@ namespace Engine
     {
         public String Name { get; set; }
         public int BPM { get; set; }
+        public int IntervalsByBPM { get; set; }
         public int[] MusicLine { get; set; }
         public int[] RythmLine { get; set; }
         

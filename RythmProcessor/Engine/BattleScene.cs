@@ -81,6 +81,7 @@ namespace Engine
             StreamReader sr = new StreamReader("./Content/testpnm.json");//TODO externaliser
             String jsonFile = sr.ReadToEnd();
             jsonTempoFile = JsonConvert.DeserializeObject<SongDTO>(jsonFile, settings);
+            divisionDeTemps = 4;//TODO à mettre dans le json! CF EDITEURRYTHME timerBPM.Interval = secFromBpm / 4;
 
 
             mainGame.IsMouseVisible = true;
@@ -110,6 +111,8 @@ namespace Engine
             Factory.Instance.LoadPlayer();
             //Player.Instance.currentCharacter.mapRepresentation.Load();
 
+            bpmTimer = new Timer(60000 / jsonTempoFile.BPM / divisionDeTemps);
+
             base.Load();
 
         }
@@ -132,7 +135,7 @@ namespace Engine
                     }
                     else
                     {
-                        StopMusic();
+                        PauseMusic();
                     }
                 }
             }
@@ -151,7 +154,7 @@ namespace Engine
 
             foreach (Beat b in beats)
             {
-                b.Update(currentBeat, divisionDeTemps, mainGame.deltaTime);
+                b.Update(currentBeat, divisionDeTemps, mainGame.deltaTime, playMusic);
             }
 
                 //snowMap.Update();
@@ -159,9 +162,18 @@ namespace Engine
 
         private void StartMusic()
         {
-            MediaPlayer.Play(testMusic);
-            divisionDeTemps = 4;//TODO à mettre dans le json! CF EDITEURRYTHME timerBPM.Interval = secFromBpm / 4;
-            bpmTimer = new Timer(60000 / jsonTempoFile.BPM / divisionDeTemps); //à mettre peut-être en dehors du Start
+            if (MediaPlayer.State == MediaState.Paused)
+            {
+                MediaPlayer.Resume();
+            }
+            else
+            {
+                MediaPlayer.Play(testMusic);
+            }
+            
+            
+            
+            
             //TODO vérifier que le Timer est indépendant de l'Update
             bpmTimer.Elapsed += OnTimedEvent;
             bpmTimer.AutoReset = true;
@@ -174,9 +186,10 @@ namespace Engine
             currentBeat++;
         }
 
-        private void StopMusic()
+        private void PauseMusic()
         {
-            MediaPlayer.Stop();
+            MediaPlayer.Pause();
+            bpmTimer.Stop();
         }
 
         protected void DrawSceneToTexture(RenderTarget2D renderTarget, GameTime gameTime)

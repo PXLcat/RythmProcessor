@@ -13,7 +13,7 @@ namespace RythmProcessor.Engine
         public BeatType type;
         public int BeatNumber { get; set; }
         public float DistanceFromRightBorder { get; set; }
-        public bool Active { get; set; }
+        public bool Visible { get; set; }
 
         //méthode destroy des beat du tableau de int pour que le foreach passe plus dans le début du json?
 
@@ -42,18 +42,18 @@ namespace RythmProcessor.Engine
         {
         }
 
-        public void Update(int currentBeat, int divisionDeTemps, float deltaTime)
+        public void Update(int currentBeat, int divisionDeTemps, float deltaTime, bool currentlyPlaying)
         {
             if (currentBeat > BeatNumber - divisionDeTemps * 4)
             {
-                Active = true;
+                Visible = true;
             }
             else if (BeatNumber < currentBeat- divisionDeTemps)
             {
-                Active = false;
+                Visible = false;
             }
 
-            if (Active)
+            if (Visible && currentlyPlaying)
             {
                 int vitesse = 2;  //comment/par rapport à quoi la définir? sûrement par rapport au tempo
                 DistanceFromRightBorder += vitesse * deltaTime;
@@ -62,14 +62,13 @@ namespace RythmProcessor.Engine
 
         public void Draw(SpriteBatch sb, Texture2D beatTexture, int hauteurBarre, int windowWidth, int zoom)
         {
-            if (Active)
+            if (Visible)
             {
                 sb.Draw(beatTexture, new Rectangle(windowWidth/zoom - (int)DistanceFromRightBorder, hauteurBarre, beatTexture.Width, beatTexture.Height), Color.White);
             }
         }
 
-
-
+        
     }
     public enum BeatType
     {

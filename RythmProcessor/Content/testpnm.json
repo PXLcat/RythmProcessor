@@ -1,6 +1,7 @@
 {
   "Name": "paynomind",
   "BPM": 122,
+  "IntervalsByBPM": 4,
   "MusicLine": [],
   "RythmLine": [
     22,
