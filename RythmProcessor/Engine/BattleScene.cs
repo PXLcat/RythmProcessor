@@ -28,14 +28,14 @@ namespace Engine
         Texture2D pauseButton;
         Texture2D rythmClicked;
         Texture2D rythmUnclicked;
-        Texture2D barreTemps;
+        Texture2D barreTempsVerticale;
         Texture2D stopButton;
 
-        Vector2 inputButtonOrigin = new Vector2(100, 100);
-        Vector2 playPauseOrigin = new Vector2(200, 100); //coin bas gauche
+        Point inputButtonOrigin = new Point(100, 100);
+        Point playPauseOrigin = new Point(200, 100); //coin bas gauche
         Point stopBtnOrigin = new Point(250, 100);
 
-        Vector2 posBarreTemps = new Vector2(20, 10);
+        Point posBarreTemps = new Point(20, 10);
         Rectangle playPauseZone;
         int hauteurBarreRythme;
 
@@ -81,7 +81,7 @@ namespace Engine
             barreHorizontale = mainGame.Content.Load<Texture2D>("barreHoriz");
             rythmClicked = mainGame.Content.Load<Texture2D>("rythmClicked");
             rythmUnclicked = mainGame.Content.Load<Texture2D>("rythmUnclicked");
-            barreTemps = mainGame.Content.Load<Texture2D>("barreTemps");//TODO penser à la draw avec origine au millieu
+            barreTempsVerticale = mainGame.Content.Load<Texture2D>("barreTemps");//TODO penser à la draw avec origine au millieu
             stopButton = mainGame.Content.Load<Texture2D>("stopButton");
 
 
@@ -198,18 +198,13 @@ namespace Engine
                 MediaPlayer.Play(testMusic);
             }
 
-
-
-
-            //TODO vérifier que le Timer est indépendant de l'Update
-
             bpmTimer.AutoReset = true;
             bpmTimer.Start();
 
         }
         private void PauseMusic()
         {
-            MediaPlayer.Pause(); //TODO rendre les beats inactifs
+            MediaPlayer.Pause();
             bpmTimer.Stop();
         }
 
@@ -242,7 +237,8 @@ namespace Engine
             mainGame.spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null); //SamplerState.PointClamp => Permet de resize du pixel art sans blur
 
 
-            mainGame.spriteBatch.Draw(barreTemps, new Rectangle((int)posBarreTemps.X, (int)posBarreTemps.Y, barreTemps.Width, barreTemps.Height), Color.White);
+            mainGame.spriteBatch.Draw(barreTempsVerticale, new Rectangle((int)posBarreTemps.X, (int)posBarreTemps.Y, barreTempsVerticale.Width, barreTempsVerticale.Height),
+                null, Color.White, 0, new Vector2(barreTempsVerticale.Width/2, 0),SpriteEffects.None,1);//la barre fait 3px de large, comment ça fera divisé par 2? prend en compte le zoom?
 
             Tools.DrawTiled(mainGame.spriteBatch, barreHorizontale, new Vector2(0, 20), 30);
             foreach (Beat b in beats)
@@ -251,7 +247,7 @@ namespace Engine
             }
 
 
-            mainGame.spriteBatch.Draw(inputButtonClicked ? buttonClicked : buttonUnclicked, inputButtonOrigin, Color.White);
+            mainGame.spriteBatch.Draw(inputButtonClicked ? buttonClicked : buttonUnclicked, new Vector2(inputButtonOrigin.X, inputButtonOrigin.Y), Color.White);
             mainGame.spriteBatch.Draw(stopButton, new Rectangle(stopBtnOrigin.X, stopBtnOrigin.Y, stopButton.Width, stopButton.Height),
                 null, Color.White, 0, new Vector2(0, stopButton.Height), SpriteEffects.None, 1);
 
