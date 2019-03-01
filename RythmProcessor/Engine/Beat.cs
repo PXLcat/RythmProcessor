@@ -42,9 +42,9 @@ namespace RythmProcessor.Engine
         {
         }
 
-        public void Update(int currentBeat, int divisionDeTemps, float deltaTime, bool currentlyPlaying)
+        public void Update(int currentBeat, int bpm, int divisionDeTemps, float deltaTime, bool currentlyPlaying, int lineSize, int tempsDAvance)
         {
-            if (currentBeat > BeatNumber - divisionDeTemps * 4)
+            if (currentBeat > BeatNumber - divisionDeTemps * tempsDAvance)
             {
                 Visible = true;
             }
@@ -55,7 +55,10 @@ namespace RythmProcessor.Engine
 
             if (Visible && currentlyPlaying)
             {
-                int vitesse = 2;  //comment/par rapport à quoi la définir? sûrement par rapport au tempo
+                float i = lineSize / (divisionDeTemps * tempsDAvance);
+                float y = 15*100/ bpm; 
+                float vitesse = i/y;  //comment/par rapport à quoi la définir? sûrement par rapport au tempo
+
                 DistanceFromRightBorder += vitesse * deltaTime;
             }
         }
@@ -67,7 +70,11 @@ namespace RythmProcessor.Engine
                 sb.Draw(beatTexture, new Rectangle(windowWidth/zoom - (int)DistanceFromRightBorder, hauteurBarre, beatTexture.Width, beatTexture.Height), Color.White);
             }
         }
-
+        public void Reset()
+        {
+            Visible = false;
+            DistanceFromRightBorder = 0;
+        }
         
     }
     public enum BeatType

@@ -17,6 +17,10 @@ namespace Engine
 {
     public class BattleScene : Scene
     {
+        //Texture xxxBtn La texture à afficher
+        //Vector2 xxxBtnOrigin La position
+        //Rectangle xxxBtnZone La hitbox
+
         Texture2D barreHorizontale;
         Texture2D buttonUnclicked;
         Texture2D buttonClicked;
@@ -24,25 +28,36 @@ namespace Engine
         Texture2D pauseButton;
         Texture2D rythmClicked;
         Texture2D rythmUnclicked;
+        Texture2D barreTemps;
+        Texture2D stopButton;
 
         Vector2 inputButtonOrigin = new Vector2(100, 100);
         Vector2 playPauseOrigin = new Vector2(200, 100); //coin bas gauche
+        Point stopBtnOrigin = new Point(250, 100);
+
+        Vector2 posBarreTemps = new Vector2(20, 10);
         Rectangle playPauseZone;
         int hauteurBarreRythme;
 
         Rectangle inputButtonZone;
+        Rectangle stopBtnZone;
         bool inputButtonClicked;
 
         int currentBeat;
+        int tempsDAvance;
         int divisionDeTemps;
 
 
         bool playMusic; //false pause, true play
 
-        
+        //de la barre verticale d'input au bord droit de la fenêtre
+        int longeurBarre;
 
-        
-        
+        //TODO faire une liste de boutons
+
+
+
+
 
         bool tempoMatch;
 
@@ -66,11 +81,18 @@ namespace Engine
             barreHorizontale = mainGame.Content.Load<Texture2D>("barreHoriz");
             rythmClicked = mainGame.Content.Load<Texture2D>("rythmClicked");
             rythmUnclicked = mainGame.Content.Load<Texture2D>("rythmUnclicked");
+            barreTemps = mainGame.Content.Load<Texture2D>("barreTemps");//TODO penser à la draw avec origine au millieu
+            stopButton = mainGame.Content.Load<Texture2D>("stopButton");
+
+
 
             testMusic = mainGame.Content.Load<Song>("paynomind");
 
             hauteurBarreRythme = 20;
             currentBeat = 0;
+
+            tempsDAvance = 4;
+            //longeurBarre = mainGame.graphics.PreferredBackBufferWidth-
 
             JsonSerializerSettings settings = new JsonSerializerSettings
             {
@@ -88,10 +110,11 @@ namespace Engine
 
 
 
-            
+
 
             playPauseZone = new Rectangle((int)playPauseOrigin.X, (int)playPauseOrigin.Y - playButton.Height, playButton.Width, playButton.Height);
             inputButtonZone = new Rectangle((int)inputButtonOrigin.X, (int)inputButtonOrigin.Y, buttonUnclicked.Width, buttonUnclicked.Height);
+            stopBtnZone = new Rectangle(stopBtnOrigin.X, stopBtnOrigin.Y - stopButton.Height, stopButton.Width, stopButton.Height);
 
             //snowMap = new IsometricMap(); // pas super
             //snowMap.Load(mainGame.Content);
@@ -112,7 +135,7 @@ namespace Engine
             //Player.Instance.currentCharacter.mapRepresentation.Load();
 
             bpmTimer = new Timer(60000 / jsonTempoFile.BPM / divisionDeTemps);
-
+            bpmTimer.Elapsed += OnTimedEvent;
             base.Load();
 
         }
@@ -138,8 +161,12 @@ namespace Engine
                         PauseMusic();
                     }
                 }
+                else if (stopBtnZone.Contains(cursorPosition))
+                {
+                    StopMusic();
+                }
             }
-            if ((playerInputs.Contains(InputType.SINGLE_LEFT_CLICK)|| playerInputs.Contains(InputType.LEFT_CLICK))
+            if ((playerInputs.Contains(InputType.SINGLE_LEFT_CLICK) || playerInputs.Contains(InputType.LEFT_CLICK))
                 && inputButtonZone.Contains(cursorPosition))
             {
                 inputButtonClicked = true;
@@ -154,11 +181,11 @@ namespace Engine
 
             foreach (Beat b in beats)
             {
-                b.Update(currentBeat, divisionDeTemps, mainGame.deltaTime, playMusic);
+                b.Update(currentBeat, jsonTempoFile.BPM, divisionDeTemps, mainGame.deltaTime, playMusic, (mainGame.graphics.PreferredBackBufferWidth - (int)posBarreTemps.X) / 2, tempsDAvance);
             }
 
-                //snowMap.Update();
-            }
+            //snowMap.Update();
+        }
 
         private void StartMusic()
         {
@@ -170,26 +197,36 @@ namespace Engine
             {
                 MediaPlayer.Play(testMusic);
             }
-            
-            
-            
-            
+
+
+
+
             //TODO vérifier que le Timer est indépendant de l'Update
-            bpmTimer.Elapsed += OnTimedEvent;
+
             bpmTimer.AutoReset = true;
             bpmTimer.Start();
 
+        }
+        private void PauseMusic()
+        {
+            MediaPlayer.Pause(); //TODO rendre les beats inactifs
+            bpmTimer.Stop();
+        }
+
+        private void StopMusic()
+        {
+            MediaPlayer.Stop();
+            bpmTimer.Stop();
+            foreach (Beat b in beats)
+            {
+                b.Reset();
+            }
+            currentBeat = 0;
         }
 
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
             currentBeat++;
-        }
-
-        private void PauseMusic()
-        {
-            MediaPlayer.Pause();
-            bpmTimer.Stop();
         }
 
         protected void DrawSceneToTexture(RenderTarget2D renderTarget, GameTime gameTime)
@@ -204,17 +241,22 @@ namespace Engine
 
             mainGame.spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null); //SamplerState.PointClamp => Permet de resize du pixel art sans blur
 
-            Tools.DrawTiled(mainGame.spriteBatch, barreHorizontale, new Vector2(0,20),30) ;
+
+            mainGame.spriteBatch.Draw(barreTemps, new Rectangle((int)posBarreTemps.X, (int)posBarreTemps.Y, barreTemps.Width, barreTemps.Height), Color.White);
+
+            Tools.DrawTiled(mainGame.spriteBatch, barreHorizontale, new Vector2(0, 20), 30);
             foreach (Beat b in beats)
             {
-                b.Draw(mainGame.spriteBatch,inputButtonClicked?rythmClicked:rythmUnclicked,hauteurBarreRythme,mainGame.graphics.PreferredBackBufferWidth,zoom); //TODO décalage sur Y selon que tempoMatch (2px plus bas) ou non
+                b.Draw(mainGame.spriteBatch, inputButtonClicked ? rythmClicked : rythmUnclicked, hauteurBarreRythme, mainGame.graphics.PreferredBackBufferWidth, zoom); //TODO décalage sur Y selon que tempoMatch (2px plus bas) ou non
             }
 
 
-            mainGame.spriteBatch.Draw(inputButtonClicked?buttonClicked: buttonUnclicked, inputButtonOrigin, Color.White);
+            mainGame.spriteBatch.Draw(inputButtonClicked ? buttonClicked : buttonUnclicked, inputButtonOrigin, Color.White);
+            mainGame.spriteBatch.Draw(stopButton, new Rectangle(stopBtnOrigin.X, stopBtnOrigin.Y, stopButton.Width, stopButton.Height),
+                null, Color.White, 0, new Vector2(0, stopButton.Height), SpriteEffects.None, 1);
 
             //celui là c'est pour savoir si il le tempo correspond ou pas:
-            mainGame.spriteBatch.Draw(buttonUnclicked, new Vector2(100,200), tempoMatch ? Color.Green : Color.Red);
+            mainGame.spriteBatch.Draw(buttonUnclicked, new Vector2(100, 200), tempoMatch ? Color.Green : Color.Red);
 
             Texture2D toDrawButton = null;
             if (playMusic)

@@ -94,7 +94,7 @@ namespace Engine
                 cursorPosition = Mouse.GetState().Position;
             }
 
-            cursorPosition = new Point(cursorPosition.X/zoom, cursorPosition.Y/zoom);
+            cursorPosition = new Point(cursorPosition.X / zoom, cursorPosition.Y / zoom);
 
 #if DEBUG
             mouse = Mouse.GetState();
@@ -109,7 +109,7 @@ namespace Engine
         {
 #if DEBUG
             mainGame.spriteBatch.DrawString(Fonts.Instance.kenPixel16, mouseText ?? "", mouseTextPos, Color.Yellow);
-            mainGame.spriteBatch.DrawString(Fonts.Instance.kenPixel16, cursorCarthPos.ToString(), Vector2.Zero, Color.Yellow);
+            //mainGame.spriteBatch.DrawString(Fonts.Instance.kenPixel16, cursorCarthPos.ToString(), Vector2.Zero, Color.Yellow);
 
 #endif
 
