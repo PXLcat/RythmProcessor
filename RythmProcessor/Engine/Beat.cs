@@ -63,11 +63,23 @@ namespace RythmProcessor.Engine
             }
         }
 
-        public void Draw(SpriteBatch sb, Texture2D beatTexture, int hauteurBarre, int windowWidth, int zoom)
+        public void Draw(SpriteBatch sb, Texture2D beatTexture, int hauteurBarreMusic, int hauteurBarreRythme, int windowWidth, int zoom)
         {
             if (Visible)
             {
-                sb.Draw(beatTexture, new Rectangle(windowWidth/zoom - (int)DistanceFromRightBorder, hauteurBarre, beatTexture.Width, beatTexture.Height), Color.White);
+                switch (type)
+                {
+                    case BeatType.MUSIC:
+                        sb.Draw(beatTexture, new Rectangle(windowWidth / zoom - (int)DistanceFromRightBorder, hauteurBarreMusic, beatTexture.Width, beatTexture.Height), Color.White);
+                        break;
+                    case BeatType.RYTHM:
+                        sb.Draw(beatTexture, new Rectangle(windowWidth / zoom - (int)DistanceFromRightBorder, hauteurBarreRythme, beatTexture.Width, beatTexture.Height), Color.White);
+                        break;
+                    default:
+                        break;
+                }
+
+                
             }
         }
         public void Reset()

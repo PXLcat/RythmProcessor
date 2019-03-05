@@ -38,6 +38,7 @@ namespace Engine
         Point posBarreTemps = new Point(20, 10);
         Rectangle playPauseZone;
         int hauteurBarreRythme;
+        int hauteurBarreMusique;
 
         Rectangle inputButtonZone;
         Rectangle stopBtnZone;
@@ -88,7 +89,8 @@ namespace Engine
 
             testMusic = mainGame.Content.Load<Song>("paynomind");
 
-            hauteurBarreRythme = 20;
+            hauteurBarreMusique = 20;
+            hauteurBarreRythme = 40;
             currentBeat = 0;
 
             tempsDAvance = 4;
@@ -122,6 +124,10 @@ namespace Engine
             zoom = 2;
 
             beats = new List<Beat>();
+            foreach (int i in jsonTempoFile.MusicLine)
+            {
+                beats.Add(new Beat(BeatType.MUSIC, i));
+            }
             foreach (int i in jsonTempoFile.RythmLine)
             {
                 beats.Add(new Beat(BeatType.RYTHM, i));
@@ -236,14 +242,32 @@ namespace Engine
 
             mainGame.spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null); //SamplerState.PointClamp => Permet de resize du pixel art sans blur
 
+            DrawInterface();
+
+            //snowMap.Draw(mainGame.spriteBatch);
+            //Player.Instance.currentCharacter.mapRepresentation.Draw(mainGame.spriteBatch);
+
+            base.Draw(gameTime);
+
+            mainGame.spriteBatch.End();
+            //__________________________________________________________
+
+            // Drop the render target
+            mainGame.GraphicsDevice.SetRenderTarget(null);
+        }
+        public void DrawInterface()
+        {
+            Tools.DrawTiled(mainGame.spriteBatch, barreHorizontale, new Vector2(0, hauteurBarreMusique), 30);
+            Tools.DrawTiled(mainGame.spriteBatch, barreHorizontale, new Vector2(0, hauteurBarreRythme), 30);
 
             mainGame.spriteBatch.Draw(barreTempsVerticale, new Rectangle((int)posBarreTemps.X, (int)posBarreTemps.Y, barreTempsVerticale.Width, barreTempsVerticale.Height),
-                null, Color.White, 0, new Vector2(barreTempsVerticale.Width/2, 0),SpriteEffects.None,1);//la barre fait 3px de large, comment ça fera divisé par 2? prend en compte le zoom?
+                null, Color.White, 0, new Vector2(barreTempsVerticale.Width / 2, 0), SpriteEffects.None, 1);//la barre fait 3px de large, comment ça fera divisé par 2? prend en compte le zoom?
 
-            Tools.DrawTiled(mainGame.spriteBatch, barreHorizontale, new Vector2(0, 20), 30);
+            
             foreach (Beat b in beats)
             {
-                b.Draw(mainGame.spriteBatch, inputButtonClicked ? rythmClicked : rythmUnclicked, hauteurBarreRythme, mainGame.graphics.PreferredBackBufferWidth, zoom); //TODO décalage sur Y selon que tempoMatch (2px plus bas) ou non
+                b.Draw(mainGame.spriteBatch, inputButtonClicked ? rythmClicked : rythmUnclicked, 
+                    hauteurBarreMusique, hauteurBarreRythme, mainGame.graphics.PreferredBackBufferWidth, zoom); //TODO décalage sur Y selon que tempoMatch (2px plus bas) ou non
             }
 
 
@@ -267,19 +291,8 @@ namespace Engine
                     null, Color.White, 0, new Vector2(0, toDrawButton.Height), SpriteEffects.None, 1);
 
             mainGame.spriteBatch.DrawString(Fonts.Instance.kenPixel16, currentBeat.ToString(), new Vector2(0, 50), Color.White);
-
-
-            //snowMap.Draw(mainGame.spriteBatch);
-            //Player.Instance.currentCharacter.mapRepresentation.Draw(mainGame.spriteBatch);
-
-            base.Draw(gameTime);
-
-            mainGame.spriteBatch.End();
-            //__________________________________________________________
-
-            // Drop the render target
-            mainGame.GraphicsDevice.SetRenderTarget(null);
         }
+
 
         public override void Draw(GameTime gameTime)
         {
