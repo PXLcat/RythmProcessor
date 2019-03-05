@@ -21,15 +21,19 @@ namespace Engine
         //Vector2 xxxBtnOrigin La position
         //Rectangle xxxBtnZone La hitbox
 
+        #region Texture2D
         Texture2D barreHorizontale;
+        Texture2D barreTempsVerticale;
         Texture2D buttonUnclicked;
         Texture2D buttonClicked;
         Texture2D playButton;
         Texture2D pauseButton;
+        Texture2D stopButton;
         Texture2D rythmClicked;
         Texture2D rythmUnclicked;
-        Texture2D barreTempsVerticale;
-        Texture2D stopButton;
+        Texture2D musicClicked;
+        Texture2D musicUnclicked;
+        #endregion
 
         Point inputButtonOrigin = new Point(100, 100);
         Point playPauseOrigin = new Point(200, 100); //coin bas gauche
@@ -51,8 +55,7 @@ namespace Engine
 
         bool playMusic; //false pause, true play
 
-        //de la barre verticale d'input au bord droit de la fenêtre
-        int longeurBarre;
+
 
         //TODO faire une liste de boutons
 
@@ -62,7 +65,7 @@ namespace Engine
 
         bool tempoMatch;
 
-        Song testMusic; //externaliser ce qui est musique
+        Song payNoMind; //externaliser ce qui est musique
 
         SongDTO jsonTempoFile;
         Timer bpmTimer;
@@ -75,6 +78,7 @@ namespace Engine
         }
         public override void Load()
         {
+            #region TextureLoading
             buttonUnclicked = mainGame.Content.Load<Texture2D>("buttonUnclicked");
             buttonClicked = mainGame.Content.Load<Texture2D>("buttonClicked");
             playButton = mainGame.Content.Load<Texture2D>("playButton");
@@ -82,19 +86,19 @@ namespace Engine
             barreHorizontale = mainGame.Content.Load<Texture2D>("barreHoriz");
             rythmClicked = mainGame.Content.Load<Texture2D>("rythmClicked");
             rythmUnclicked = mainGame.Content.Load<Texture2D>("rythmUnclicked");
-            barreTempsVerticale = mainGame.Content.Load<Texture2D>("barreTemps");//TODO penser à la draw avec origine au millieu
+            barreTempsVerticale = mainGame.Content.Load<Texture2D>("barreTemps");
             stopButton = mainGame.Content.Load<Texture2D>("stopButton");
+            musicUnclicked = mainGame.Content.Load<Texture2D>("musicUnclicked");
+            musicClicked = mainGame.Content.Load<Texture2D>("musicClicked");
+            #endregion
 
-
-
-            testMusic = mainGame.Content.Load<Song>("paynomind");
+            payNoMind = mainGame.Content.Load<Song>("paynomind");
 
             hauteurBarreMusique = 20;
             hauteurBarreRythme = 40;
             currentBeat = 0;
 
             tempsDAvance = 4;
-            //longeurBarre = mainGame.graphics.PreferredBackBufferWidth-
 
             JsonSerializerSettings settings = new JsonSerializerSettings
             {
@@ -201,7 +205,7 @@ namespace Engine
             }
             else
             {
-                MediaPlayer.Play(testMusic);
+                MediaPlayer.Play(payNoMind);
             }
 
             bpmTimer.AutoReset = true;
@@ -266,7 +270,7 @@ namespace Engine
             
             foreach (Beat b in beats)
             {
-                b.Draw(mainGame.spriteBatch, inputButtonClicked ? rythmClicked : rythmUnclicked, 
+                b.Draw(mainGame.spriteBatch, inputButtonClicked ? musicClicked : musicUnclicked , inputButtonClicked ? rythmClicked : rythmUnclicked, 
                     hauteurBarreMusique, hauteurBarreRythme, mainGame.graphics.PreferredBackBufferWidth, zoom); //TODO décalage sur Y selon que tempoMatch (2px plus bas) ou non
             }
 
@@ -302,7 +306,7 @@ namespace Engine
 
             mainGame.spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null); //SamplerState.PointClamp => Permet de resize du pixel art sans blur
 
-            mainGame.spriteBatch.Draw(renderTarget, new Rectangle(0, 0, 800, 600), Color.White);
+            mainGame.spriteBatch.Draw(renderTarget, new Rectangle(0, 0, 960, 540), Color.White); //TODO cette résolution et celle de maingame doivent être liées
 
             mainGame.spriteBatch.End();
 

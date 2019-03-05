@@ -30,8 +30,8 @@ namespace RythmProcessor
         /// </summary>
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = 800;  // set this value to the desired width of your window
-            graphics.PreferredBackBufferHeight = 600;   // set this value to the desired height of your window
+            graphics.PreferredBackBufferWidth = 960;  // set this value to the desired width of your window
+            graphics.PreferredBackBufferHeight = 540;   // set this value to the desired height of your window
             graphics.ApplyChanges();
 
             gameState.ChangeScene(Gamestate.SceneType.BATTLE);
