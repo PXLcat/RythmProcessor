@@ -74,6 +74,9 @@
 /processorParam:Quality=Best
 /build:lionhearted.wav
 
+#begin mapneigeside.tmx
+/copy:mapneigeside.tmx
+
 #begin musicClicked.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -97,6 +100,21 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:musicUnclicked.png
+
+#begin neige side.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:neige side.png
+
+#begin neige side.tsx
+/copy:neige side.tsx
 
 #begin pauseButton.png
 /importer:TextureImporter

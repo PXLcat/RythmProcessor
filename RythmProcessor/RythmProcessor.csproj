@@ -60,6 +60,7 @@
     <Compile Include="Engine\IsometricMap.cs" />
     <Compile Include="Engine\Player.cs" />
     <Compile Include="Engine\Scene.cs" />
+    <Compile Include="Engine\SideViewMap.cs" />
     <Compile Include="Engine\SongDTO.cs" />
     <Compile Include="Engine\Tiles\ModelTile.cs" />
     <Compile Include="Engine\Tiles\TileGround.cs" />

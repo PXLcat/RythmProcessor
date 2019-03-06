@@ -54,7 +54,7 @@ namespace Engine
 
 
         bool playMusic; //false pause, true play
-
+        SideViewMap snowMap;
 
 
         //TODO faire une liste de boutons
@@ -122,8 +122,8 @@ namespace Engine
             inputButtonZone = new Rectangle((int)inputButtonOrigin.X, (int)inputButtonOrigin.Y, buttonUnclicked.Width, buttonUnclicked.Height);
             stopBtnZone = new Rectangle(stopBtnOrigin.X, stopBtnOrigin.Y - stopButton.Height, stopButton.Width, stopButton.Height);
 
-            //snowMap = new IsometricMap(); // pas super
-            //snowMap.Load(mainGame.Content);
+            snowMap = new SideViewMap(); // pas super
+            snowMap.Load(mainGame.Content);
 
             zoom = 2;
 
@@ -246,9 +246,9 @@ namespace Engine
 
             mainGame.spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null); //SamplerState.PointClamp => Permet de resize du pixel art sans blur
 
+            snowMap.Draw(mainGame.spriteBatch);
             DrawInterface();
 
-            //snowMap.Draw(mainGame.spriteBatch);
             //Player.Instance.currentCharacter.mapRepresentation.Draw(mainGame.spriteBatch);
 
             base.Draw(gameTime);
