@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,8 @@ namespace Engine
         Point tileSize;
 
 
-        List<ModelTile> mapElements;
+        List<ModelTile> tilesElements;
+        List<MapImageLayer> imageElements;
 
         // TODO : faire une fonction pour déterminer si un tileset a des tiles "plates" ou "block" et utiliser pour savoir quoi charger dans le Laod
 
@@ -33,7 +35,7 @@ namespace Engine
             {
                 { "neige side", contentManager.Load<Texture2D>(sideSnowMap.Tilesets[0].Name) },//se référer à l'ordre dans le xml
             };//TODO générer par Factory
-            sideSnowMap.Layers[]
+
 
             tileOrBlockWidth = sideSnowMap.Tilesets[0].TileWidth;
             tileSize = new Point(sideSnowMap.Tilesets[0].TileWidth, sideSnowMap.Tilesets[0].TileHeight);
@@ -42,12 +44,12 @@ namespace Engine
             //originTileCoord = new Point(snowMap.Tilesets[0].TileWidth * (snowMap.Width / 4) - snowMap.Tilesets[0].TileWidth / 2, 0);
             originTileCoord = new Point(0, -2); //à mettre ailleurs
 
-            FillMapElements();
+            FillMapElements(contentManager);
 
         }
-        public void FillMapElements()
+        public void FillMapElements(ContentManager contentManager)
         {
-            mapElements = new List<ModelTile>();
+            tilesElements = new List<ModelTile>();
 
             for (int i = 0; i < sideSnowMap.Layers.Count; i++)// Pour chaque layer
             {
@@ -76,9 +78,9 @@ namespace Engine
                             if ((sideSnowMap.Layers[i].Tiles[y].Gid >= sideSnowMap.Tilesets[ts].FirstGid)
                                 && (sideSnowMap.Layers[i].Tiles[y].Gid < sideSnowMap.Tilesets[ts].FirstGid + sideSnowMap.Tilesets[ts].TileCount))
                             {
-                                Point xAndYPosition = new Point(originTileCoord.X +orthogonalX*tileSize.X, originTileCoord.Y+orthogonalY*tileSize.Y);
+                                Point xAndYPosition = new Point(originTileCoord.X + orthogonalX * tileSize.X, originTileCoord.Y + orthogonalY * tileSize.Y);
 
-                                mapElements.Add(CreateTile(ts, sideSnowMap.Layers[i].Tiles[y].Gid,
+                                tilesElements.Add(CreateTile(ts, sideSnowMap.Layers[i].Tiles[y].Gid,
                                     xAndYPosition, (orthogonalX + orthogonalY + layerZ), sideSnowMap.Tilesets[ts].TileWidth, sideSnowMap.Tilesets[ts].TileHeight));
                             }
                             //else ce Gid ne fait pas partie de ce tileset
@@ -95,6 +97,16 @@ namespace Engine
                 }
 
             }
+
+            imageElements = new List<MapImageLayer>();
+            foreach (TmxImageLayer imageLayer in sideSnowMap.ImageLayers)
+            {
+                string imageName = Path.GetFileNameWithoutExtension(imageLayer.Image.Source);
+                imageElements.Add(new MapImageLayer(contentManager.Load<Texture2D>(imageName),
+                    new Point(originTileCoord.X + (int)imageLayer.OffsetX, originTileCoord.Y + (int)imageLayer.OffsetY), 
+                    new Point(imageLayer.Image.Width.Value, imageLayer.Image.Height.Value)));
+            }
+
             sideSnowMap = null; //On a plus besoin de la TmxMap, tout est dans la liste
         }
 
@@ -115,7 +127,12 @@ namespace Engine
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (ModelTile tile in mapElements)
+            foreach (MapImageLayer mil in imageElements)
+            {
+                spriteBatch.Draw(mil.Image, new Rectangle(mil.CurrentPosition, mil.Size),Color.White);
+            }
+
+            foreach (ModelTile tile in tilesElements)
             {
                 spriteBatch.Draw(tilesetsTextures.Values.ElementAt(tile.TileSheetNb),
                     new Rectangle(tile.XPosition, tile.YPosition, tile.Width, tile.Height),

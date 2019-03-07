@@ -37,7 +37,8 @@ namespace Engine.Tiles
             
         }
 
-        public void Draw(SpriteBatch sb)
+        public void Draw(SpriteBatch sb) //c'est la map, qui contient les tilesets, qui s'en charge peut
+            //peutêtre plus tard passer la texture en argument, et c'est cette classe qui s'en carge en prenant en compte le scrolling
         {
             //sb.Draw(Map.tileset, new Vector2(CurrentPosition.X, CurrentPosition.Y), sourceRectangle, Color.White);
             //TODO ne pas oublier que le Draw doit se faire avec l'origine venant d'en bas!

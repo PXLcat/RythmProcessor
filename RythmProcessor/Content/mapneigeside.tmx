@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-down" width="30" height="18" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="1">
  <tileset firstgid="1" source="neige side.tsx"/>
- <imagelayer id="12" name="Image Layer 1" offsetx="-7" offsety="0">
+ <imagelayer id="12" name="00background" offsetx="-7" offsety="0">
   <image source="neige background.png" width="508" height="270"/>
  </imagelayer>
  <layer id="8" name="00sol1" width="30" height="18">

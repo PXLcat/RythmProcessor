@@ -33,6 +33,8 @@ namespace Engine
         Texture2D rythmUnclicked;
         Texture2D musicClicked;
         Texture2D musicUnclicked;
+        Texture2D great;
+        Texture2D missed;
         #endregion
 
         Point inputButtonOrigin = new Point(100, 100);
@@ -62,8 +64,8 @@ namespace Engine
 
 
 
-
         bool tempoMatch;
+        bool inputMatchTempo;
 
         Song payNoMind; //externaliser ce qui est musique
 
@@ -90,6 +92,8 @@ namespace Engine
             stopButton = mainGame.Content.Load<Texture2D>("stopButton");
             musicUnclicked = mainGame.Content.Load<Texture2D>("musicUnclicked");
             musicClicked = mainGame.Content.Load<Texture2D>("musicClicked");
+            missed = mainGame.Content.Load<Texture2D>("missed");
+            great = mainGame.Content.Load<Texture2D>("great");
             #endregion
 
             payNoMind = mainGame.Content.Load<Song>("paynomind");
@@ -156,6 +160,8 @@ namespace Engine
         public override void Update(GameTime gameTime, float deltaTime)
         {
             base.Update(gameTime, deltaTime); //la récupération des inputs se fait dans la méthode de la classe mère
+            tempoMatch = jsonTempoFile.RythmLine.Contains<int>(currentBeat);
+            inputMatchTempo = false;
 
             if (playerInputs.Contains(InputType.SINGLE_LEFT_CLICK))
             {
@@ -180,6 +186,10 @@ namespace Engine
                 && inputButtonZone.Contains(cursorPosition))
             {
                 inputButtonClicked = true;
+                if (tempoMatch)
+                {
+                    inputMatchTempo = true;
+                }
             }
             else
             {
@@ -187,7 +197,7 @@ namespace Engine
             }
             //Player.Instance.currentCharacter.mapRepresentation.Update(playerInputs, deltaTime);
 
-            tempoMatch = jsonTempoFile.RythmLine.Contains<int>(currentBeat);
+            
 
             foreach (Beat b in beats)
             {
@@ -273,7 +283,17 @@ namespace Engine
                 b.Draw(mainGame.spriteBatch, inputButtonClicked ? musicClicked : musicUnclicked , inputButtonClicked ? rythmClicked : rythmUnclicked, 
                     hauteurBarreMusique, hauteurBarreRythme, mainGame.graphics.PreferredBackBufferWidth, zoom); //TODO décalage sur Y selon que tempoMatch (2px plus bas) ou non
             }
-
+            if (inputButtonClicked)
+            {
+                if (inputMatchTempo)
+                {
+                    mainGame.spriteBatch.Draw(great, new Rectangle(20, 80, great.Width, great.Height), Color.White);
+                }
+                else
+                {
+                    mainGame.spriteBatch.Draw(missed, new Rectangle(20, 80, missed.Width, missed.Height), Color.White);
+                }
+            }
 
             mainGame.spriteBatch.Draw(inputButtonClicked ? buttonClicked : buttonUnclicked, new Vector2(inputButtonOrigin.X, inputButtonOrigin.Y), Color.White);
             mainGame.spriteBatch.Draw(stopButton, new Rectangle(stopBtnOrigin.X, stopBtnOrigin.Y, stopButton.Width, stopButton.Height),

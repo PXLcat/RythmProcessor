@@ -55,6 +55,7 @@
     <Compile Include="Engine\CommonImagery\IDrawable.cs" />
     <Compile Include="Engine\Factory.cs" />
     <Compile Include="Engine\Gamestate.cs" />
+    <Compile Include="Engine\MapImageLayer.cs" />
     <Compile Include="Engine\IMapDrawable.cs" />
     <Compile Include="Engine\Input.cs" />
     <Compile Include="Engine\IsometricMap.cs" />
