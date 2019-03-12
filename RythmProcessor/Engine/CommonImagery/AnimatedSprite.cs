@@ -16,6 +16,10 @@ namespace Engine.CommonImagery
         /// </summary>
         public int Columns { get; set; }
         /// <summary>
+        /// Nombre de lignes du spritesheet/de frames de l'animation. Compté à partir de 0.
+        /// </summary>
+        public int Rows { get; set; }
+        /// <summary>
         /// La vitesse (en nombre d'updates) à laquelle on va passer d'une frame à une autre
         /// </summary>
         public int FrameSpeed { get; set; }
@@ -24,7 +28,7 @@ namespace Engine.CommonImagery
             get { return currentFrame; }
             set
             {
-                if ((value < 0) || (value > Columns))
+                if ((value < 0) || (value > Columns*Rows))
                     throw new Exception("Not a valid frame number for this sprite");
                 else
                     currentFrame = value;
@@ -54,17 +58,19 @@ namespace Engine.CommonImagery
         /// <param name="texture"></param>
         /// <param name="currentPosition"></param>
         /// <param name="columns">Nombre d'images du spritesheet</param>
-        /// <param name="framespeed">La vitesse (en nombre d'updates) à laquelle on va passer d'une frame à une autre</param>
-        public AnimatedSprite(Texture2D texture, Vector2 currentPosition, int columns, int framespeed) : base(texture, currentPosition) 
+        /// <param name="framespeed">La vitesse à laquelle on va passer d'une frame à une autre</param>
+        public AnimatedSprite(Texture2D texture, Vector2 currentPosition, int columns, int rows, int framespeed) : base(texture, currentPosition) 
         {
             Columns = columns;
+            Rows = rows;
             FrameSpeed = framespeed; //avec la lecture Json, le framespeed est de base mis à 0, donc on ne peut plus utiliser l'argument optionnel
 
             CurrentFrame = 0;
             compteurFrame = 0;
             FrameWidth = Texture.Width / Columns;
-            FrameHeight = Texture.Height;
+            FrameHeight = Texture.Height/Rows;
 
+            //on met l'origine de l'image au point en bas au millieu
             center = new Vector2(FrameWidth / 2, FrameHeight);
         }
 
@@ -77,11 +83,11 @@ namespace Engine.CommonImagery
             if (compteurFrame >= FrameSpeed)
             {
                 CurrentFrame++;
-                if (CurrentFrame == (Columns - 1))
+                if (CurrentFrame == (Columns*Rows - 1))
                 {
                     FirstLoopDone = true;
                 }
-                else if (CurrentFrame == Columns)
+                else if (CurrentFrame == Columns * Rows)
                 {
                     CurrentFrame = 0;
 
@@ -93,7 +99,7 @@ namespace Engine.CommonImagery
         {
 
 
-            Rectangle sourceRectangle = new Rectangle(CurrentFrame * FrameWidth, 0, FrameWidth, FrameHeight);
+            Rectangle sourceRectangle = new Rectangle((CurrentFrame % (Columns-1))* FrameWidth, (CurrentFrame % Rows)*FrameHeight, FrameWidth, FrameHeight);
             int layerDepth = 0; //TODO attention à layer depth, à ajouter comme para plus tard
             Vector2 drawPosition = new Vector2(CurrentPosition.X, CurrentPosition.Y + 8); //permet de donner l'impression que le sprite est ancré dans le sol et non en train de flotter au dessus
 

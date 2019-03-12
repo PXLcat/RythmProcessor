@@ -58,6 +58,7 @@ namespace Engine
         bool playMusic; //false pause, true play
         SideViewMap snowMap;
 
+        AnimatedSprite countTest;
 
         //TODO faire une liste de boutons
 
@@ -118,7 +119,7 @@ namespace Engine
 
             mainGame.IsMouseVisible = true;
 
-
+            countTest = new AnimatedSprite(mainGame.Content.Load<Texture2D>("testSpritesheet"), new Vector2(250, 150), 3, 2, 40);
 
 
 
@@ -203,7 +204,7 @@ namespace Engine
             {
                 b.Update(currentBeat, jsonTempoFile.BPM, divisionDeTemps, mainGame.deltaTime, playMusic, (mainGame.graphics.PreferredBackBufferWidth - (int)posBarreTemps.X) / 2, tempsDAvance);
             }
-
+            countTest.Update(deltaTime);
             //snowMap.Update();
         }
 
@@ -258,6 +259,7 @@ namespace Engine
 
             snowMap.Draw(mainGame.spriteBatch);
             DrawInterface();
+            countTest.Draw(mainGame.spriteBatch);
 
             //Player.Instance.currentCharacter.mapRepresentation.Draw(mainGame.spriteBatch);
 

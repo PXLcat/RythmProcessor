@@ -80,22 +80,22 @@ namespace Engine
                     sideRepresentation = characterDTO.SideRepresentation == null ? null :
                     new SideRepresentation
                     {
-                        idle = String.IsNullOrEmpty(characterDTO.SideRepresentation.Idle.ImgFile) ? null :
-                        new AnimatedSprite(mG.Content.Load<Texture2D>(characterDTO.SideRepresentation.Idle.ImgFile),
-                        Vector2.Zero, //voir ce qu'on fout de cette position dans le constructeur pas focément utile
-                        characterDTO.SideRepresentation.Idle.Columns, characterDTO.SideRepresentation.Idle.FrameSpeed),
-                        run = String.IsNullOrEmpty(characterDTO.SideRepresentation.Run.ImgFile) ? null :
-                        new AnimatedSprite(mG.Content.Load<Texture2D>(characterDTO.SideRepresentation.Run.ImgFile),
-                        Vector2.Zero,
-                        characterDTO.SideRepresentation.Idle.Columns, characterDTO.SideRepresentation.Run.FrameSpeed),
-                        jump = String.IsNullOrEmpty(characterDTO.SideRepresentation.Jump.ImgFile) ? null :
-                        new AnimatedSprite(mG.Content.Load<Texture2D>(characterDTO.SideRepresentation.Jump.ImgFile),
-                        Vector2.Zero,
-                        characterDTO.SideRepresentation.Idle.Columns, characterDTO.SideRepresentation.Jump.FrameSpeed),
-                        fall = String.IsNullOrEmpty(characterDTO.SideRepresentation.Fall.ImgFile) ? null :
-                        new AnimatedSprite(mG.Content.Load<Texture2D>(characterDTO.SideRepresentation.Fall.ImgFile),
-                        Vector2.Zero,
-                        characterDTO.SideRepresentation.Idle.Columns, characterDTO.SideRepresentation.Fall.FrameSpeed),
+                        //idle = String.IsNullOrEmpty(characterDTO.SideRepresentation.Idle.ImgFile) ? null :
+                        //new AnimatedSprite(mG.Content.Load<Texture2D>(characterDTO.SideRepresentation.Idle.ImgFile),
+                        //Vector2.Zero, //voir ce qu'on fout de cette position dans le constructeur pas focément utile
+                        //characterDTO.SideRepresentation.Idle.Columns, characterDTO.SideRepresentation.Idle.FrameSpeed),
+                        //run = String.IsNullOrEmpty(characterDTO.SideRepresentation.Run.ImgFile) ? null :
+                        //new AnimatedSprite(mG.Content.Load<Texture2D>(characterDTO.SideRepresentation.Run.ImgFile),
+                        //Vector2.Zero,
+                        //characterDTO.SideRepresentation.Idle.Columns, characterDTO.SideRepresentation.Run.FrameSpeed),
+                        //jump = String.IsNullOrEmpty(characterDTO.SideRepresentation.Jump.ImgFile) ? null :
+                        //new AnimatedSprite(mG.Content.Load<Texture2D>(characterDTO.SideRepresentation.Jump.ImgFile),
+                        //Vector2.Zero,
+                        //characterDTO.SideRepresentation.Idle.Columns, characterDTO.SideRepresentation.Jump.FrameSpeed),
+                        //fall = String.IsNullOrEmpty(characterDTO.SideRepresentation.Fall.ImgFile) ? null :
+                        //new AnimatedSprite(mG.Content.Load<Texture2D>(characterDTO.SideRepresentation.Fall.ImgFile),
+                        //Vector2.Zero,
+                        //characterDTO.SideRepresentation.Idle.Columns, characterDTO.SideRepresentation.Fall.FrameSpeed),
 
                     },
                     mapRepresentation = characterDTO.MapRepresentation == null ? null :
