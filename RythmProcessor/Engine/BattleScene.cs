@@ -7,6 +7,7 @@ using RythmProcessor;
 using RythmProcessor.Engine;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -33,8 +34,10 @@ namespace Engine
         Texture2D rythmUnclicked;
         Texture2D musicClicked;
         Texture2D musicUnclicked;
-        Texture2D great;
         Texture2D missed;
+
+        AnimatedSprite greatAnimated;
+        AnimatedSprite missedAnimated;
         #endregion
 
         Point inputButtonOrigin = new Point(100, 100);
@@ -54,11 +57,13 @@ namespace Engine
         int tempsDAvance;
         int divisionDeTemps;
 
+        bool showGreat;
+        bool showMissed;
+
 
         bool playMusic; //false pause, true play
         SideViewMap snowMap;
 
-        AnimatedSprite countTest;
 
         //TODO faire une liste de boutons
 
@@ -93,14 +98,15 @@ namespace Engine
             stopButton = mainGame.Content.Load<Texture2D>("stopButton");
             musicUnclicked = mainGame.Content.Load<Texture2D>("musicUnclicked");
             musicClicked = mainGame.Content.Load<Texture2D>("musicClicked");
-            missed = mainGame.Content.Load<Texture2D>("missed");
-            great = mainGame.Content.Load<Texture2D>("great");
+
+            greatAnimated = new AnimatedSprite(mainGame.Content.Load<Texture2D>("greatAnimated"), new Vector2(20, 80), 2, 7,framespeed:2);
+            missedAnimated = new AnimatedSprite(mainGame.Content.Load<Texture2D>("missedAnimated"), new Vector2(20, 80), 2, 4);
             #endregion
 
             payNoMind = mainGame.Content.Load<Song>("paynomind");
 
             hauteurBarreMusique = 20;
-            hauteurBarreRythme = 40;
+            hauteurBarreRythme = 40;                                      
             currentBeat = 0;
 
             tempsDAvance = 4;
@@ -119,7 +125,7 @@ namespace Engine
 
             mainGame.IsMouseVisible = true;
 
-            countTest = new AnimatedSprite(mainGame.Content.Load<Texture2D>("testSpritesheet"), new Vector2(250, 150), 3, 2, 40);
+
 
 
 
@@ -160,6 +166,7 @@ namespace Engine
         }
         public override void Update(GameTime gameTime, float deltaTime)
         {
+            //Debug.WriteLine("update");
             base.Update(gameTime, deltaTime); //la récupération des inputs se fait dans la méthode de la classe mère
             tempoMatch = jsonTempoFile.RythmLine.Contains<int>(currentBeat);
             inputMatchTempo = false;
@@ -183,7 +190,7 @@ namespace Engine
                     StopMusic();
                 }
             }
-            if ((playerInputs.Contains(InputType.SINGLE_LEFT_CLICK) || playerInputs.Contains(InputType.LEFT_CLICK))
+            if ((playerInputs.Contains(InputType.SINGLE_LEFT_CLICK) || playerInputs.Contains(InputType.LEFT_CLICK))//TODO deuxième partie à enlever
                 && inputButtonZone.Contains(cursorPosition))
             {
                 inputButtonClicked = true;
@@ -198,13 +205,44 @@ namespace Engine
             }
             //Player.Instance.currentCharacter.mapRepresentation.Update(playerInputs, deltaTime);
 
-            
-
             foreach (Beat b in beats)
             {
                 b.Update(currentBeat, jsonTempoFile.BPM, divisionDeTemps, mainGame.deltaTime, playMusic, (mainGame.graphics.PreferredBackBufferWidth - (int)posBarreTemps.X) / 2, tempsDAvance);
             }
-            countTest.Update(deltaTime);
+
+            if (showGreat)
+            {
+                if (greatAnimated.FirstLoopDone == true)
+                {
+                    showGreat = false;
+                }
+                else
+                {
+                    greatAnimated.Update(deltaTime);
+                }
+            }
+            if (inputButtonClicked)
+            {
+                if (inputMatchTempo)
+                {
+                    showGreat = true;
+                    showMissed = false;
+                }
+                else
+                {
+                    showGreat = false;
+                    showMissed = true;
+
+                }
+                greatAnimated.BackToFirstFrame();
+            }
+            else
+            {
+                showMissed = false;
+            }
+            
+            
+
             //snowMap.Update();
         }
 
@@ -259,7 +297,6 @@ namespace Engine
 
             snowMap.Draw(mainGame.spriteBatch);
             DrawInterface();
-            countTest.Draw(mainGame.spriteBatch);
 
             //Player.Instance.currentCharacter.mapRepresentation.Draw(mainGame.spriteBatch);
 
@@ -285,17 +322,15 @@ namespace Engine
                 b.Draw(mainGame.spriteBatch, inputButtonClicked ? musicClicked : musicUnclicked , inputButtonClicked ? rythmClicked : rythmUnclicked, 
                     hauteurBarreMusique, hauteurBarreRythme, mainGame.graphics.PreferredBackBufferWidth, zoom); //TODO décalage sur Y selon que tempoMatch (2px plus bas) ou non
             }
-            if (inputButtonClicked)
+            if (showGreat)
             {
-                if (inputMatchTempo)
-                {
-                    mainGame.spriteBatch.Draw(great, new Rectangle(20, 80, great.Width, great.Height), Color.White);
-                }
-                else
-                {
-                    mainGame.spriteBatch.Draw(missed, new Rectangle(20, 80, missed.Width, missed.Height), Color.White);
-                }
+                greatAnimated.Draw(mainGame.spriteBatch);
             }
+            else if (showMissed)
+            {
+                missedAnimated.Draw(mainGame.spriteBatch);
+            }
+
 
             mainGame.spriteBatch.Draw(inputButtonClicked ? buttonClicked : buttonUnclicked, new Vector2(inputButtonOrigin.X, inputButtonOrigin.Y), Color.White);
             mainGame.spriteBatch.Draw(stopButton, new Rectangle(stopBtnOrigin.X, stopBtnOrigin.Y, stopButton.Width, stopButton.Height),

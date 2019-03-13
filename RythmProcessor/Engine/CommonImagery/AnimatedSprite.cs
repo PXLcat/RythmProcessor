@@ -59,8 +59,10 @@ namespace Engine.CommonImagery
         /// <param name="currentPosition"></param>
         /// <param name="columns">Nombre d'images du spritesheet</param>
         /// <param name="framespeed">La vitesse à laquelle on va passer d'une frame à une autre</param>
-        public AnimatedSprite(Texture2D texture, Vector2 currentPosition, int columns, int rows, int framespeed) : base(texture, currentPosition) 
+        public AnimatedSprite(Texture2D texture, Vector2 currentPosition, int columns, int rows,
+            Origin origin = Origin.LEFT_UP, int framespeed=4) : base(texture, currentPosition) 
         {
+
             Columns = columns;
             Rows = rows;
             FrameSpeed = framespeed; //avec la lecture Json, le framespeed est de base mis à 0, donc on ne peut plus utiliser l'argument optionnel
@@ -70,8 +72,24 @@ namespace Engine.CommonImagery
             FrameWidth = Texture.Width / Columns;
             FrameHeight = Texture.Height/Rows;
 
-            //on met l'origine de l'image au point en bas au millieu
-            center = new Vector2(FrameWidth / 2, FrameHeight);
+            switch (origin)
+            {
+                case Origin.CENTER:
+                    center = new Vector2(FrameWidth / 2, FrameHeight / 2);
+                    break;
+                case Origin.LEFT_UP:
+                    center = Vector2.Zero;
+                    break;
+                case Origin.MIDDLE_DOWN:
+                    center = new Vector2(FrameWidth / 2, FrameHeight);
+                    break;
+                case Origin.MIDDLE_DOWN_ANCHORED:
+                    center = new Vector2(FrameWidth / 2, FrameHeight);
+                    break;
+                default:
+                    break;
+            }
+
         }
 
         /// <summary>
@@ -100,16 +118,19 @@ namespace Engine.CommonImagery
 
             
             Rectangle sourceRectangle = new Rectangle((CurrentFrame % Columns)* FrameWidth, (int)Math.Floor((double)CurrentFrame / Columns) *FrameHeight, FrameWidth, FrameHeight);
-            int layerDepth = 0; //TODO attention à layer depth, à ajouter comme para plus tard
-            Vector2 drawPosition = new Vector2(CurrentPosition.X, CurrentPosition.Y + 8); //permet de donner l'impression que le sprite est ancré dans le sol et non en train de flotter au dessus
-
-
             //Debug.WriteLine("Current Frame: " + CurrentFrame + " nbColumns: " + Columns);
-            if (horizontalFlip)
-                sb.Draw(Texture, drawPosition, sourceRectangle, Color.White, 0, center, 1, SpriteEffects.FlipHorizontally, layerDepth);
-            else
-                sb.Draw(Texture, drawPosition, sourceRectangle, Color.White, 0, center, 1, SpriteEffects.None, layerDepth);
 
+            if (horizontalFlip)
+                sb.Draw(Texture, CurrentPosition, sourceRectangle, Color.White, 0, center, 1, SpriteEffects.FlipHorizontally, LayerDepth);
+            else
+                sb.Draw(Texture, CurrentPosition, sourceRectangle, Color.White, 0, center, 1, SpriteEffects.None, LayerDepth);
+
+        }
+        public void BackToFirstFrame()
+        {
+            CurrentFrame = 0;
+            compteurFrame = 0;
+            FirstLoopDone = false;
         }
     }
 }

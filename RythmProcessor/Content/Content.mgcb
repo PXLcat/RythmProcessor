@@ -61,7 +61,7 @@
 /processorParam:TextureFormat=Color
 /build:buttonUnclicked.png
 
-#begin great.png
+#begin greatAnimated.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -71,7 +71,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:great.png
+/build:greatAnimated.png
 
 #begin KenPixelBlocks.spritefont
 /importer:FontDescriptionImporter
@@ -89,7 +89,7 @@
 #begin mapneigeside.tmx
 /copy:mapneigeside.tmx
 
-#begin missed.png
+#begin missedAnimated.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -99,7 +99,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:missed.png
+/build:missedAnimated.png
 
 #begin musicClicked.png
 /importer:TextureImporter

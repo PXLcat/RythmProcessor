@@ -37,15 +37,15 @@ namespace Engine
 
             if (newMouseState.LeftButton == ButtonState.Pressed)
             {
-                if (newMouseState == oldMouseState)
+                if (newMouseState.LeftButton != oldMouseState.LeftButton)
                 {
-                    inputs.Add(InputType.LEFT_CLICK);
-                    Debug.Write("input long clic");
+                    inputs.Add(InputType.SINGLE_LEFT_CLICK);
+                    Debug.WriteLine("input clic");
                 }
                 else
                 {
-                    inputs.Add(InputType.SINGLE_LEFT_CLICK);
-                    Debug.Write("input clic");
+                    inputs.Add(InputType.LEFT_CLICK);
+                    Debug.WriteLine("input long clic");
                 }
 
             }

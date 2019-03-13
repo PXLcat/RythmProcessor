@@ -23,11 +23,27 @@ namespace Engine.CommonImagery
         /// <param name="texture"></param>
         /// <param name="currentPosition"></param>
         /// <param name="yOffset"></param>
-        public DrawableImage(Texture2D texture, Vector2 currentPosition)
+        public DrawableImage(Texture2D texture, Vector2 currentPosition, Origin drawOrigin = Origin.LEFT_UP)
         {
             Texture = texture;
             CurrentPosition = currentPosition;
-            center = new Vector2(Texture.Width / 2, Texture.Height / 2);
+            switch (drawOrigin)
+            {
+                case Origin.CENTER:
+                    center = new Vector2(Texture.Width / 2, Texture.Height / 2);
+                    break;
+                case Origin.LEFT_UP:
+                    center = Vector2.Zero;
+                    break;
+                case Origin.MIDDLE_DOWN:
+                    center = new Vector2(Texture.Width / 2, Texture.Height);
+                    break;
+                case Origin.MIDDLE_DOWN_ANCHORED:
+                    center = new Vector2(Texture.Width / 2, Texture.Height);
+                    break;
+                default:
+                    break;
+            }
 
             LayerDepth = 0; //TODO rendre modifiable
         }
@@ -58,5 +74,12 @@ namespace Engine.CommonImagery
 
         } 
 
+    }
+    public enum Origin
+    {
+        CENTER,
+        LEFT_UP,
+        MIDDLE_DOWN,
+        MIDDLE_DOWN_ANCHORED //dans le cas d'un perso dont les talons sont à quelques pixels du bas de l'image
     }
 }
