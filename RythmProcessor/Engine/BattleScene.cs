@@ -51,7 +51,8 @@ namespace Engine
 
         Rectangle inputButtonZone;
         Rectangle stopBtnZone;
-        bool inputButtonClicked;
+        bool inputRythmPushed;
+        bool inputMusicPushed;
 
         int currentBeat;
         int tempsDAvance;
@@ -70,8 +71,10 @@ namespace Engine
 
 
 
-        bool tempoMatch;
-        bool inputMatchTempo;
+        bool rythmTempoMatch;
+        bool musicTempoMatch;
+        bool inputRythmMatchTempo;
+        bool inputMusicMatchTempo;
 
         Song payNoMind; //externaliser ce qui est musique
 
@@ -168,8 +171,8 @@ namespace Engine
         {
             //Debug.WriteLine("update");
             base.Update(gameTime, deltaTime); //la récupération des inputs se fait dans la méthode de la classe mère
-            tempoMatch = jsonTempoFile.RythmLine.Contains<int>(currentBeat);
-            inputMatchTempo = false;
+            rythmTempoMatch = jsonTempoFile.RythmLine.Contains<int>(currentBeat);
+            inputRythmMatchTempo = false;
 
             if (playerInputs.Contains(InputType.SINGLE_LEFT_CLICK))
             {
@@ -190,18 +193,38 @@ namespace Engine
                     StopMusic();
                 }
             }
-            if ((playerInputs.Contains(InputType.SINGLE_LEFT_CLICK) || playerInputs.Contains(InputType.LEFT_CLICK))//TODO deuxième partie à enlever
-                && inputButtonZone.Contains(cursorPosition))
+            if (playerInputs.Contains(InputType.SINGLE_SPACE))
             {
-                inputButtonClicked = true;
-                if (tempoMatch)
+                inputMusicPushed = true;
+                if (musicTempoMatch)
                 {
-                    inputMatchTempo = true;
+                    inputMusicMatchTempo = true;
+                }
+            }
+            if (playerInputs.Contains(InputType.SINGLE_A)|| playerInputs.Contains(InputType.SINGLE_E))//TODO deuxième partie à enlever
+            {
+                inputRythmPushed = true;
+                if (rythmTempoMatch)
+                {
+                    inputRythmMatchTempo = true;
+                }
+
+                if (playerInputs.Contains(InputType.SINGLE_A) && playerInputs.Contains(InputType.SINGLE_E))
+                {
+                    //défense
+                }
+                else if (playerInputs.Contains(InputType.SINGLE_A))
+                {
+                    //dash à gauche
+                }
+                else if (playerInputs.Contains(InputType.SINGLE_E))
+                {
+                    //dash à droite
                 }
             }
             else
             {
-                inputButtonClicked = false;
+                inputRythmPushed = false;
             }
             //Player.Instance.currentCharacter.mapRepresentation.Update(playerInputs, deltaTime);
 
@@ -210,6 +233,17 @@ namespace Engine
                 b.Update(currentBeat, jsonTempoFile.BPM, divisionDeTemps, mainGame.deltaTime, playMusic, (mainGame.graphics.PreferredBackBufferWidth - (int)posBarreTemps.X) / 2, tempsDAvance);
             }
 
+            if (showMissed)
+            {
+                if (missedAnimated.FirstLoopDone == true)
+                {
+                    showMissed = false;
+                }
+                else
+                {
+                    missedAnimated.Update(deltaTime);
+                }
+            }
             if (showGreat)
             {
                 if (greatAnimated.FirstLoopDone == true)
@@ -221,9 +255,9 @@ namespace Engine
                     greatAnimated.Update(deltaTime);
                 }
             }
-            if (inputButtonClicked)
+            if (inputRythmPushed)
             {
-                if (inputMatchTempo)
+                if (inputRythmMatchTempo)
                 {
                     showGreat = true;
                     showMissed = false;
@@ -235,11 +269,9 @@ namespace Engine
 
                 }
                 greatAnimated.BackToFirstFrame();
+                missedAnimated.BackToFirstFrame();
             }
-            else
-            {
-                showMissed = false;
-            }
+
             
             
 
@@ -319,7 +351,7 @@ namespace Engine
             
             foreach (Beat b in beats)
             {
-                b.Draw(mainGame.spriteBatch, inputButtonClicked ? musicClicked : musicUnclicked , inputButtonClicked ? rythmClicked : rythmUnclicked, 
+                b.Draw(mainGame.spriteBatch, inputMusicPushed ? musicClicked : musicUnclicked , inputRythmPushed ? rythmClicked : rythmUnclicked, 
                     hauteurBarreMusique, hauteurBarreRythme, mainGame.graphics.PreferredBackBufferWidth, zoom); //TODO décalage sur Y selon que tempoMatch (2px plus bas) ou non
             }
             if (showGreat)
@@ -332,12 +364,12 @@ namespace Engine
             }
 
 
-            mainGame.spriteBatch.Draw(inputButtonClicked ? buttonClicked : buttonUnclicked, new Vector2(inputButtonOrigin.X, inputButtonOrigin.Y), Color.White);
+            mainGame.spriteBatch.Draw(inputRythmPushed ? buttonClicked : buttonUnclicked, new Vector2(inputButtonOrigin.X, inputButtonOrigin.Y), Color.White);
             mainGame.spriteBatch.Draw(stopButton, new Rectangle(stopBtnOrigin.X, stopBtnOrigin.Y, stopButton.Width, stopButton.Height),
                 null, Color.White, 0, new Vector2(0, stopButton.Height), SpriteEffects.None, 1);
 
             //celui là c'est pour savoir si il le tempo correspond ou pas:
-            mainGame.spriteBatch.Draw(buttonUnclicked, new Vector2(100, 200), tempoMatch ? Color.Green : Color.Red);
+            mainGame.spriteBatch.Draw(buttonUnclicked, new Vector2(100, 200), rythmTempoMatch ? Color.Green : Color.Red);
 
             Texture2D toDrawButton = null;
             if (playMusic)

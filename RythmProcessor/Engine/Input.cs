@@ -83,6 +83,21 @@ namespace Engine
                 inputs.Add(InputType.RIGHT);
                 Debug.Write("input right");
             }
+            if (newKbState.IsKeyDown(Keys.A))
+            {
+                inputs.Add(InputType.A);
+                Debug.Write("input A");
+            }
+            if (newKbState.IsKeyDown(Keys.E))
+            {
+                inputs.Add(InputType.E);
+                Debug.Write("input E");
+            }
+            if (newKbState.IsKeyDown(Keys.Space))
+            {
+                inputs.Add(InputType.SPACE);
+                Debug.Write("input space");
+            }
             if (newKbState.IsKeyDown(Keys.Up) && newKbState != oldKbState)
             { //mettre à part les conditions à rallonge?
                 inputs.Add(InputType.SINGLE_UP);
@@ -103,10 +118,21 @@ namespace Engine
                 inputs.Add(InputType.SINGLE_RIGHT);
                 Debug.Write("input single right");
             }
-
-
-
-
+            if (newKbState.IsKeyDown(Keys.A) && newKbState != oldKbState)//attention type clavier
+            {
+                inputs.Add(InputType.SINGLE_A);
+                Debug.Write("input single a");
+            }
+            if (newKbState.IsKeyDown(Keys.E) && newKbState != oldKbState)
+            {
+                inputs.Add(InputType.SINGLE_E);
+                Debug.Write("input single e");
+            }
+            if (newKbState.IsKeyDown(Keys.Space) && newKbState != oldKbState)//attention type clavier
+            {
+                inputs.Add(InputType.SINGLE_SPACE);
+                Debug.Write("input single a");
+            }
             if (newKbState.IsKeyDown(Keys.Enter) && newKbState != oldKbState)
             {
                 inputs.Add(InputType.SINGLE_ENTER);
@@ -145,10 +171,16 @@ namespace Engine
         DOWN,
         LEFT,
         RIGHT,
+        A,
+        E,
+        SPACE,
         SINGLE_UP,
         SINGLE_DOWN,
         SINGLE_LEFT,
         SINGLE_RIGHT,
+        SINGLE_A,
+        SINGLE_E,
+        SINGLE_SPACE,
         JUMP, // fall n'est pas un "input"
         ATTACK1,
         SINGLE_ENTER,
