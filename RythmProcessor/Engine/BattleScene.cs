@@ -54,6 +54,9 @@ namespace Engine
         bool inputRythmPushed;
         bool inputMusicPushed;
 
+        bool showRythmPushed;
+        bool showMusicPushed;
+
         int currentBeat;
         int tempsDAvance;
         int divisionDeTemps;
@@ -173,6 +176,8 @@ namespace Engine
             base.Update(gameTime, deltaTime); //la récupération des inputs se fait dans la méthode de la classe mère
             rythmTempoMatch = jsonTempoFile.RythmLine.Contains<int>(currentBeat);
             inputRythmMatchTempo = false;
+            showRythmPushed = false;
+            showMusicPushed = false;
 
             if (playerInputs.Contains(InputType.SINGLE_LEFT_CLICK))
             {
@@ -204,6 +209,7 @@ namespace Engine
             if (playerInputs.Contains(InputType.SINGLE_A)|| playerInputs.Contains(InputType.SINGLE_E))//TODO deuxième partie à enlever
             {
                 inputRythmPushed = true;
+                showRythmPushed = true;
                 if (rythmTempoMatch)
                 {
                     inputRythmMatchTempo = true;
@@ -222,9 +228,15 @@ namespace Engine
                     //dash à droite
                 }
             }
+            else if (playerInputs.Contains(InputType.A) || playerInputs.Contains(InputType.E))
+            {
+                showRythmPushed = true;
+                inputRythmPushed = false;
+            }
             else
             {
                 inputRythmPushed = false;
+                showRythmPushed = false;
             }
             //Player.Instance.currentCharacter.mapRepresentation.Update(playerInputs, deltaTime);
 
@@ -351,7 +363,7 @@ namespace Engine
             
             foreach (Beat b in beats)
             {
-                b.Draw(mainGame.spriteBatch, inputMusicPushed ? musicClicked : musicUnclicked , inputRythmPushed ? rythmClicked : rythmUnclicked, 
+                b.Draw(mainGame.spriteBatch, inputMusicPushed ? musicClicked : musicUnclicked , showRythmPushed ? rythmClicked : rythmUnclicked, 
                     hauteurBarreMusique, hauteurBarreRythme, mainGame.graphics.PreferredBackBufferWidth, zoom); //TODO décalage sur Y selon que tempoMatch (2px plus bas) ou non
             }
             if (showGreat)
@@ -364,7 +376,7 @@ namespace Engine
             }
 
 
-            mainGame.spriteBatch.Draw(inputRythmPushed ? buttonClicked : buttonUnclicked, new Vector2(inputButtonOrigin.X, inputButtonOrigin.Y), Color.White);
+            mainGame.spriteBatch.Draw(showRythmPushed ? buttonClicked : buttonUnclicked, new Vector2(inputButtonOrigin.X, inputButtonOrigin.Y), Color.White);
             mainGame.spriteBatch.Draw(stopButton, new Rectangle(stopBtnOrigin.X, stopBtnOrigin.Y, stopButton.Width, stopButton.Height),
                 null, Color.White, 0, new Vector2(0, stopButton.Height), SpriteEffects.None, 1);
 
