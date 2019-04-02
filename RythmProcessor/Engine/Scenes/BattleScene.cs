@@ -57,7 +57,6 @@ namespace Engine
         bool showRythmPushed;
         bool showMusicPushed;
 
-        int currentBeat;
         int tempsDAvance;
         int divisionDeTemps;
 
@@ -71,13 +70,13 @@ namespace Engine
 
         //TODO faire une liste de boutons
 
-
-
-
         bool rythmTempoMatch;
         bool musicTempoMatch;
         bool inputRythmMatchTempo;
         bool inputMusicMatchTempo;
+
+
+        public MusicManager musicManager = MusicManager.Instance;
 
         Song payNoMind; //externaliser ce qui est musique
 
@@ -113,26 +112,14 @@ namespace Engine
 
             hauteurBarreMusique = 20;
             hauteurBarreRythme = 40;                                      
-            currentBeat = 0;
+
 
             tempsDAvance = 4;
 
-            JsonSerializerSettings settings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore, //attention dino danger
-                MissingMemberHandling = MissingMemberHandling.Ignore
-            };
 
-            StreamReader sr = new StreamReader("./Content/testpnm.json");//TODO externaliser
-            String jsonFile = sr.ReadToEnd();
-            jsonTempoFile = JsonConvert.DeserializeObject<SongDTO>(jsonFile, settings);
-            divisionDeTemps = 4;//TODO à mettre dans le json! CF EDITEURRYTHME timerBPM.Interval = secFromBpm / 4;
-
+            musicManager.Load(mainGame, BattleSong.PAY_NO_MIND);
 
             mainGame.IsMouseVisible = true;
-
-
-
 
 
             playPauseZone = new Rectangle((int)playPauseOrigin.X, (int)playPauseOrigin.Y - playButton.Height, playButton.Width, playButton.Height);
@@ -144,15 +131,7 @@ namespace Engine
 
             zoom = 2;
 
-            beats = new List<Beat>();
-            foreach (int i in jsonTempoFile.MusicLine)
-            {
-                beats.Add(new Beat(BeatType.MUSIC, i));
-            }
-            foreach (int i in jsonTempoFile.RythmLine)
-            {
-                beats.Add(new Beat(BeatType.RYTHM, i));
-            }
+
 
 
             //Player : 
@@ -161,8 +140,7 @@ namespace Engine
             Factory.Instance.LoadPlayer();
             //Player.Instance.currentCharacter.mapRepresentation.Load();
 
-            bpmTimer = new Timer(60000 / jsonTempoFile.BPM / divisionDeTemps);
-            bpmTimer.Elapsed += OnTimedEvent;
+
             base.Load();
 
         }
@@ -174,7 +152,7 @@ namespace Engine
         {
             //Debug.WriteLine("update");
             base.Update(gameTime, deltaTime); //la récupération des inputs se fait dans la méthode de la classe mère
-            rythmTempoMatch = jsonTempoFile.RythmLine.Contains<int>(currentBeat);
+            rythmTempoMatch = musicManager.CurrentSongDTO.RythmLine.Contains<int>(musicManager.ManagedTimer.CurrentBeat);
             inputRythmMatchTempo = false;
             showRythmPushed = false;
             showMusicPushed = false;
@@ -186,16 +164,16 @@ namespace Engine
                     playMusic = !playMusic;
                     if (playMusic)
                     {
-                        StartMusic();
+                        musicManager.Play();
                     }
                     else
                     {
-                        PauseMusic();
+                        musicManager.Pause();
                     }
                 }
                 else if (stopBtnZone.Contains(cursorPosition))
                 {
-                    StopMusic();
+                    musicManager.Stop();
                 }
             }
             if (playerInputs.Contains(InputType.SINGLE_SPACE))
@@ -242,7 +220,7 @@ namespace Engine
 
             foreach (Beat b in beats)
             {
-                b.Update(currentBeat, jsonTempoFile.BPM, divisionDeTemps, mainGame.deltaTime, playMusic, (mainGame.graphics.PreferredBackBufferWidth - (int)posBarreTemps.X) / 2, tempsDAvance);
+                b.Update(musicManager.ManagedTimer.CurrentBeat, jsonTempoFile.BPM, divisionDeTemps, mainGame.deltaTime, playMusic, (mainGame.graphics.PreferredBackBufferWidth - (int)posBarreTemps.X) / 2, tempsDAvance);
             }
 
             if (showMissed)
@@ -288,43 +266,6 @@ namespace Engine
             
 
             //snowMap.Update();
-        }
-
-        private void StartMusic()
-        {
-            if (MediaPlayer.State == MediaState.Paused)
-            {
-                MediaPlayer.Resume();
-            }
-            else
-            {
-                MediaPlayer.Play(payNoMind);
-            }
-
-            bpmTimer.AutoReset = true;
-            bpmTimer.Start();
-
-        }
-        private void PauseMusic()
-        {
-            MediaPlayer.Pause();
-            bpmTimer.Stop();
-        }
-
-        private void StopMusic()
-        {
-            MediaPlayer.Stop();
-            bpmTimer.Stop();
-            foreach (Beat b in beats)
-            {
-                b.Reset();
-            }
-            currentBeat = 0;
-        }
-
-        private void OnTimedEvent(Object source, ElapsedEventArgs e)
-        {
-            currentBeat++;
         }
 
         protected void DrawSceneToTexture(RenderTarget2D renderTarget, GameTime gameTime)
@@ -395,7 +336,7 @@ namespace Engine
             mainGame.spriteBatch.Draw(toDrawButton, new Rectangle((int)playPauseOrigin.X, (int)playPauseOrigin.Y, toDrawButton.Width, toDrawButton.Height),
                     null, Color.White, 0, new Vector2(0, toDrawButton.Height), SpriteEffects.None, 1);
 
-            mainGame.spriteBatch.DrawString(Fonts.Instance.kenPixel16, currentBeat.ToString(), new Vector2(0, 50), Color.White);
+            mainGame.spriteBatch.DrawString(Fonts.Instance.kenPixel16, musicManager.ManagedTimer.CurrentBeat.ToString(), new Vector2(0, 50), Color.White);
         }
 
 

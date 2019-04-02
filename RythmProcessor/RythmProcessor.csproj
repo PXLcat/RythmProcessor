@@ -41,7 +41,8 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Engine\BattleScene.cs" />
+    <Compile Include="Engine\MusicManager.cs" />
+    <Compile Include="Engine\Scenes\BattleScene.cs" />
     <Compile Include="Engine\Beat.cs" />
     <Compile Include="Engine\CharacterClasses\Character.cs" />
     <Compile Include="Engine\CharacterClasses\CharactersListDTO.cs" />
@@ -60,11 +61,12 @@
     <Compile Include="Engine\Input.cs" />
     <Compile Include="Engine\IsometricMap.cs" />
     <Compile Include="Engine\Player.cs" />
-    <Compile Include="Engine\Scene.cs" />
+    <Compile Include="Engine\Scenes\Scene.cs" />
     <Compile Include="Engine\SideViewMap.cs" />
     <Compile Include="Engine\SongDTO.cs" />
     <Compile Include="Engine\Tiles\ModelTile.cs" />
     <Compile Include="Engine\Tiles\TileGround.cs" />
+    <Compile Include="Engine\MusicTimer.cs" />
     <Compile Include="Engine\Tools.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Program.cs" />
