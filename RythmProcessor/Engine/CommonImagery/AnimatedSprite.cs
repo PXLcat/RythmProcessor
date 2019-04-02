@@ -46,14 +46,14 @@ namespace Engine.CommonImagery
         public int FrameWidth, FrameHeight;//TODO : public pour pouvoir gérer les collisions, mettre un accesseur?
 
         /// <summary>
-        /// Millieu d'une frame
+        /// Centre d'une frame (autour duquel se font les rotations par ex.)
         /// </summary>
         public Vector2 center;
 
         private int currentFrame;
 
         /// <summary>
-        /// Constructeur de AnimatedSprite à utiliser lorsque le xOffset est inconnu. Il se mettra de base à la moitié de la largeur du sprite.
+        /// Constructeur de AnimatedSprite. Par défaut, l'origine du sprite sera en haut à droite de l'image.
         /// </summary>
         /// <param name="texture"></param>
         /// <param name="currentPosition"></param>
