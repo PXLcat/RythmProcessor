@@ -83,7 +83,6 @@ namespace Engine
         SongDTO jsonTempoFile;
         Timer bpmTimer;
 
-        List<Beat> beats;
 
         public BattleScene(MainGame mG) : base(mG)
         {
@@ -218,9 +217,9 @@ namespace Engine
             }
             //Player.Instance.currentCharacter.mapRepresentation.Update(playerInputs, deltaTime);
 
-            foreach (Beat b in beats)
+            foreach (Beat b in musicManager.ManagedTimer.Beats)
             {
-                b.Update(musicManager.ManagedTimer.CurrentBeat, jsonTempoFile.BPM, divisionDeTemps, mainGame.deltaTime, playMusic, (mainGame.graphics.PreferredBackBufferWidth - (int)posBarreTemps.X) / 2, tempsDAvance);
+                b.Update(musicManager.ManagedTimer.CurrentBeat, musicManager.ManagedTimer.BPM, musicManager.ManagedTimer.IntervalsByBPM, mainGame.deltaTime, playMusic, (mainGame.graphics.PreferredBackBufferWidth - (int)posBarreTemps.X) / 2, tempsDAvance);
             }
 
             if (showMissed)
@@ -302,7 +301,7 @@ namespace Engine
                 null, Color.White, 0, new Vector2(barreTempsVerticale.Width / 2, 0), SpriteEffects.None, 1);//la barre fait 3px de large, comment ça fera divisé par 2? prend en compte le zoom?
 
             
-            foreach (Beat b in beats)
+            foreach (Beat b in musicManager.ManagedTimer.Beats)
             {
                 b.Draw(mainGame.spriteBatch, inputMusicPushed ? musicClicked : musicUnclicked , showRythmPushed ? rythmClicked : rythmUnclicked, 
                     hauteurBarreMusique, hauteurBarreRythme, mainGame.graphics.PreferredBackBufferWidth, zoom); //TODO décalage sur Y selon que tempoMatch (2px plus bas) ou non
