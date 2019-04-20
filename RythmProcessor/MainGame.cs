@@ -34,7 +34,7 @@ namespace RythmProcessor
             graphics.PreferredBackBufferHeight = 540;   // set this value to the desired height of your window
             graphics.ApplyChanges();
 
-            gameState.ChangeScene(Gamestate.SceneType.BATTLE);
+            gameState.ChangeScene(Gamestate.SceneType.TESTCOLLISIONS);
 
             base.Initialize();
         }

@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Scenes;
 using Microsoft.Xna.Framework.Input;
 using RythmProcessor;
 using System;
@@ -18,7 +19,8 @@ namespace Engine
 
         public enum SceneType
         {
-            BATTLE
+            BATTLE,
+            TESTCOLLISIONS
         }
 
         protected MainGame mainGame;
@@ -41,6 +43,9 @@ namespace Engine
             {
                 case SceneType.BATTLE:
                     CurrentScene = new BattleScene(mainGame);
+                    break;
+                case SceneType.TESTCOLLISIONS:
+                    CurrentScene = new TestCollisionsScene(mainGame);
                     break;
             }
 

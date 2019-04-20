@@ -14,7 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace Engine
+namespace Engine.Scenes
 {
     public class BattleScene : Scene
     {

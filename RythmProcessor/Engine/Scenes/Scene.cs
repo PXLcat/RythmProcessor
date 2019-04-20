@@ -14,7 +14,7 @@ using static Engine.Gamestate;
 using TiledSharp;
 using RythmProcessor;
 
-namespace Engine
+namespace Engine.Scenes
 {
     abstract public class Scene
     {
