@@ -22,20 +22,7 @@ namespace Engine
 
             if (actor1.HitBox.Intersects(actor2.HitBox))
             {
-                //if (actor1.HitBox.Left > actor2.HitBox.Right)
-                //{
-                //    //collision par la gauche
-                //    result.collideLeft = true;
-                //    actor2.OnCollision(actor1);
-                //    result.leftCollisionDepth = actor1.HitBox.Left - actor1.HitBox.Right;
-                //}
-                //if (actor1.HitBox.Right > actor2.HitBox.Left)
-                //{
-                //    //collision par la droite
-                //    result.collideRight = true;
-                //    actor2.OnCollision(actor1);
-                //    result.rightCollisionDepth = actor1.HitBox.Right - actor1.HitBox.Left;
-                //}
+
                 if (actor1.HitBox.Top > actor2.HitBox.Bottom)
                 {
                     //collision par le haut
@@ -54,18 +41,18 @@ namespace Engine
             Rectangle xCollisionHitBox = new Rectangle(actor1.HitBox.X,
                 actor1.HitBox.Y,
                 actor1.HitBox.Width,
-                actor1.HitBox.Height - 1);
+                actor1.HitBox.Height - 8);
 
             if (xCollisionHitBox.Intersects(actor2.HitBox))
             {
-                if (xCollisionHitBox.Left > actor2.HitBox.Right)
+                if ((xCollisionHitBox.Left < actor2.HitBox.Right) && (xCollisionHitBox.Center.X > actor2.HitBox.Center.X)) //!
                 {
                     //collision par la gauche
                     result.collideLeft = true;
                     actor2.OnCollision(actor1);
                     result.leftCollisionDepth = actor2.HitBox.Right - xCollisionHitBox.Left;
                 }
-                if (actor1.HitBox.Right > actor2.HitBox.Left)
+                if ((xCollisionHitBox.Right > actor2.HitBox.Left) && (xCollisionHitBox.Center.X < actor2.HitBox.Center.X))
                 {
                     //collision par la droite
                     result.collideRight = true;

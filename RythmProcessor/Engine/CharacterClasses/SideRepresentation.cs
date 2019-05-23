@@ -125,28 +125,32 @@ namespace Engine
         private void HandleCollisions(List<ICollidable> levelActors)
         {
             isOnGround = false;
-            int i = 0;
+            int nombreDObstaclesCroises = 0;
 
             foreach (ICollidable actor in levelActors)
             {
                 if (!actor.Crossable && actor.HitBox.Intersects(HitBox) && isOnGround == false)
                 {
-                    CollideType collision = Utilities.CheckCollision(this, actor);
-                    //if (collision.collideBottom &&)
-                    //{
+                    CollideType collision = Utilities.CheckCollision(this, actor); //attention, avec ce système on ignore tous les obstacles de moins de 8px
 
-                    //}
-                    if (actor.HitBox.Top<Position.Y && collision.collideBottom)
+                    if (collision.collideBottom && !(collision.collideRight || collision.collideLeft))
                     {
                         this.Position = new Vector2(Position.X, actor.HitBox.Top);
                         isOnGround = true;
-                    }  
-                    
+                    }
+                    if (collision.collideRight)
+                    {
+                        this.Position = new Vector2(actor.HitBox.Left-(this.HitBox.Width/2), Position.Y);
+                    }
+                    if (collision.collideLeft)
+                    {
+                        this.Position = new Vector2(actor.HitBox.Right + (this.HitBox.Width / 2), Position.Y);
+                    }
                     Debug.Write("collision");
-                    i++;
+                    nombreDObstaclesCroises++;
                 }
             }
-            Debug.Write(i);
+            Debug.Write(nombreDObstaclesCroises);
         }
 
         private void SortAndExecuteInput(List<InputType> playerInputs, float deltaTime)
