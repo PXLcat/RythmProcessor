@@ -23,8 +23,12 @@ namespace Engine
         Point tileSize;
 
 
-        List<ModelTile> tilesElements;
-        List<MapImageLayer> imageElements;
+        public List<ModelTile> tilesElements;
+
+        /// <summary>
+        /// Image backgrounds
+        /// </summary>
+        public List<MapImageLayer> imageElements;
 
         // TODO : faire une fonction pour déterminer si un tileset a des tiles "plates" ou "block" et utiliser pour savoir quoi charger dans le Laod
 
@@ -137,7 +141,7 @@ namespace Engine
                 spriteBatch.Draw(tilesetsTextures.Values.ElementAt(tile.TileSheetNb),
                     new Rectangle(tile.XPosition, tile.YPosition, tile.Width, tile.Height),
                     tile.SourceRectangle, Color.White, 0f,
-                    new Vector2(0, tile.Height), SpriteEffects.None, tile.ZOrder == 0 ? 0 : 1 / tile.ZOrder); //dessin avec origine en bas à gauche //TODO est-ce que ça devrait pas être dans le Draw de ModelTile?
+                    Vector2.Zero, SpriteEffects.None, tile.ZOrder == 0 ? 0 : 1 / tile.ZOrder); //dessin avec origine en bas à gauche //TODO est-ce que ça devrait pas être dans le Draw de ModelTile?
 
 
             }

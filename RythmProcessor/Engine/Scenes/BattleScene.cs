@@ -1,4 +1,6 @@
-﻿using Engine.CommonImagery;
+﻿using Engine.CharacterClasses;
+using Engine.CommonImagery;
+using Engine.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
@@ -83,6 +85,8 @@ namespace Engine
         SongDTO jsonTempoFile;
         Timer bpmTimer;
 
+        Character player;
+
 
         public BattleScene(MainGame mG) : base(mG)
         {
@@ -130,14 +134,20 @@ namespace Engine
 
             zoom = 2;
 
+            player = new Character();
+            player.name = "ciale";
+            player.sideRepresentation = new SideRepresentation();
+            player.sideRepresentation.idle = new AnimatedSprite(mainGame.Content.Load<Texture2D>("Images/cialeidle"),
+                Vector2.Zero, //voir ce qu'on fout de cette position dans le constructeur pas focément utile
+                3, 2, Origin.MIDDLE_DOWN_ANCHORED,15);
+            player.sideRepresentation.currentSprite = player.sideRepresentation.idle;
+            player.sideRepresentation.Position = new Vector2(100, 100);
+            player.sideRepresentation.ConstantHitboxSize = new Vector2(20, 68);
+            ////Player : 
 
-
-
-            //Player : 
-
-            Player.Instance.Load(mainGame);
-            Factory.Instance.LoadPlayer();
-            //Player.Instance.currentCharacter.mapRepresentation.Load();
+            //Player.Instance.Load(mainGame);
+            //Factory.Instance.LoadPlayer();
+            ////Player.Instance.currentCharacter.mapRepresentation.Load();
 
 
             base.Load();
@@ -261,6 +271,10 @@ namespace Engine
                 missedAnimated.BackToFirstFrame();
             }
 
+            //Attention, le passage d'inputs au personnage du joueur doit se faire selon les résultats de l'algorithme précédent, pas avec une liste d'input classique
+
+            List<ICollidable> levelActors = new List<ICollidable>(snowMap.tilesElements);
+            player.Update(playerInputs, deltaTime, levelActors);
             
             
 
@@ -280,6 +294,9 @@ namespace Engine
             mainGame.spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null); //SamplerState.PointClamp => Permet de resize du pixel art sans blur
 
             snowMap.Draw(mainGame.spriteBatch);
+
+            player.sideRepresentation.Draw(mainGame.spriteBatch);
+
             DrawInterface();
 
             //Player.Instance.currentCharacter.mapRepresentation.Draw(mainGame.spriteBatch);

@@ -15,7 +15,7 @@ namespace Engine.Tiles
             : base(currentPosition, sourceRectangle, width, height, zOrder, tileSheetNb)
         {
             
-            crossable = false;
+            Crossable = false;
         }
         public override void OnCollision(ICollidable other)
         {

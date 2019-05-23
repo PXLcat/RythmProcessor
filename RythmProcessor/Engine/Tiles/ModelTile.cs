@@ -13,12 +13,12 @@ namespace Engine.Tiles
     abstract public class ModelTile : ICollidable, IMapDrawable
     {
         public Rectangle SourceRectangle { get; set; }
-        public bool crossable = false;
+        public bool Crossable { get; set; }
 
 
         public Rectangle HitBox
         {
-            get => new Rectangle((int)CurrentPosition.X, (int)CurrentPosition.Y, 100, 100);//TODO
+            get => new Rectangle((int)CurrentPosition.X, (int)CurrentPosition.Y, Width, Height);
         }
 
         public Vector2 CurrentPosition { get; set; }
@@ -46,7 +46,7 @@ namespace Engine.Tiles
 
         }
 
-        public ModelTile(Vector2 basePosition, Rectangle sourceRectangle,int width, int height, int zOrder, int tileSheetNb)
+        public ModelTile(Vector2 basePosition, Rectangle sourceRectangle,int width, int height, int zOrder, int tileSheetNb, bool crossable = false)
         {
             BasePosition = basePosition;
             CurrentPosition = BasePosition;
@@ -58,6 +58,7 @@ namespace Engine.Tiles
             this.TileSheetNb = tileSheetNb;
             this.Width = width;
             this.Height = height;
+            this.Crossable = crossable;
         }
 
         public void Update(int scrollX, int scrollY) {

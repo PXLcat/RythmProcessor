@@ -34,14 +34,14 @@ namespace Engine
             Factory factory = Factory.Instance;
             //charactersList = factory.GetCharacters();
             
-            factory.LoadPlayer();
+            //factory.LoadPlayer();
             this.currentCharacter = charactersList[0];
             currentCharacter.mapRepresentation.CurrentPosition = new Vector2(200, 200);
 
         }
-        public void Update()
+        public void Update(List<InputType> inputs,float deltatime, List<ICollidable> levelActors)
         {
-            currentCharacter.Update();
+            currentCharacter.Update(inputs, deltatime, levelActors);
         }
 
 

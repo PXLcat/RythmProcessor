@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Engine.CommonImagery
+namespace Engine
 {
     public interface ICollidable
     {
-        Rectangle HitBox { get;}
+        Rectangle HitBox { get; }
+        bool Crossable { get; set; }
         void OnCollision(ICollidable other);
     }
 }

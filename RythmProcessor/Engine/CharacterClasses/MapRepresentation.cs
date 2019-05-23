@@ -30,6 +30,7 @@ namespace Engine.CharacterClasses
         private float deltaTime;
 
         public bool HorizontalFlip { get; set; }
+        public bool Crossable { get ; set ; } //TODO
 
         public void OnCollision(ICollidable other)
         {

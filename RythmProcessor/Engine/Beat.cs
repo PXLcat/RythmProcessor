@@ -55,9 +55,9 @@ namespace RythmProcessor.Engine
 
             if (Visible && currentlyPlaying)
             {
-                float i = lineSize / (divisionDeTemps * tempsDAvance);
+                float distanceParDivision = lineSize / (divisionDeTemps * tempsDAvance);
                 float y = 15*100/ bpm; 
-                float vitesse = i/y;  //comment/par rapport à quoi la définir? sûrement par rapport au tempo
+                float vitesse = distanceParDivision / y;  //comment/par rapport à quoi la définir? sûrement par rapport au tempo
 
                 DistanceFromRightBorder += vitesse * deltaTime;
             }

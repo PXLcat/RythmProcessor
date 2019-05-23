@@ -43,23 +43,26 @@ namespace Engine
         {
         }
 
-        public void LoadPlayer()
-        {
-            JsonSerializerSettings settings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore, //attention dino danger
-                MissingMemberHandling = MissingMemberHandling.Ignore
-            };
+        //public void LoadPlayer()
+        //{
+        //    JsonSerializerSettings settings = new JsonSerializerSettings
+        //    {
+        //        NullValueHandling = NullValueHandling.Ignore, //attention dino danger
+        //        MissingMemberHandling = MissingMemberHandling.Ignore
+        //    };
 
-            StreamReader sr = new StreamReader("./Content/charactersList.json");
-            String jsonFile = sr.ReadToEnd();
-            CharactersListDTO characterList = JsonConvert.DeserializeObject<CharactersListDTO>(jsonFile, settings);
+        //    StreamReader sr = new StreamReader("./Content/charactersList.json");
+        //    String jsonFile = sr.ReadToEnd();
+        //    CharactersListDTO characterList = JsonConvert.DeserializeObject<CharactersListDTO>(jsonFile, settings);
 
-            JsonToPlayerCharacters(characterList);
+        //    JsonToPlayerCharacters(characterList);
 
-            //monsieurBloc.mapRepresentation.idleMapSprite = new AnimatedSprite(mG.Content.Load<Texture2D>("vertical_object"), new Vector2(200, 200), 1); //TODO remplacer plus tard par une collection de sprites (voir un peu  la version des utopiales)
-            //Player.Instance.currentCharacter = monsieurBloc;
-        }
+        //    //monsieurBloc.mapRepresentation.idleMapSprite = new AnimatedSprite(mG.Content.Load<Texture2D>("vertical_object"), new Vector2(200, 200), 1); //TODO remplacer plus tard par une collection de sprites (voir un peu  la version des utopiales)
+        //    //Player.Instance.currentCharacter = monsieurBloc;
+        //}
+
+
+
 
         private void JsonToPlayerCharacters(CharactersListDTO characterList) //TODO: attention à la possibilité de champs vides. Faire des vérifs pour
         {

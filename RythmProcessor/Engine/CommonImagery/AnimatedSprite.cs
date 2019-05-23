@@ -84,7 +84,7 @@ namespace Engine.CommonImagery
                     center = new Vector2(FrameWidth / 2, FrameHeight);
                     break;
                 case Origin.MIDDLE_DOWN_ANCHORED:
-                    center = new Vector2(FrameWidth / 2, FrameHeight);
+                    center = new Vector2(FrameWidth / 2, FrameHeight-3);
                     break;
                 default:
                     break;

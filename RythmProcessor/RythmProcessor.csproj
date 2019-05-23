@@ -68,6 +68,7 @@
     <Compile Include="Engine\Tiles\TileGround.cs" />
     <Compile Include="Engine\MusicTimer.cs" />
     <Compile Include="Engine\Tools.cs" />
+    <Compile Include="Engine\Utilities.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
