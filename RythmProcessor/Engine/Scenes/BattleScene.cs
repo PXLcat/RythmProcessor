@@ -137,10 +137,12 @@ namespace Engine
             player = new Character();
             player.name = "ciale";
             player.sideRepresentation = new SideRepresentation();
-            player.sideRepresentation.idle = new AnimatedSprite(mainGame.Content.Load<Texture2D>("Images/cialeidle"),
+            player.sideRepresentation.spriteIdle = new AnimatedSprite(mainGame.Content.Load<Texture2D>("Images/ciale/ciale_side_idle"),
                 Vector2.Zero, //voir ce qu'on fout de cette position dans le constructeur pas focément utile
                 3, 2, Origin.MIDDLE_DOWN_ANCHORED,15);
-            player.sideRepresentation.currentSprite = player.sideRepresentation.idle;
+            player.sideRepresentation.spriteRun = new AnimatedSprite(mainGame.Content.Load<Texture2D>("Images/ciale/ciale_side_run"),
+                Vector2.Zero, //voir ce qu'on fout de cette position dans le constructeur pas focément utile      
+                4, 3, Origin.MIDDLE_DOWN_ANCHORED, 8);
             player.sideRepresentation.Position = new Vector2(100, 100);
             player.sideRepresentation.ConstantHitboxSize = new Vector2(20, 68);
             ////Player : 
@@ -291,7 +293,7 @@ namespace Engine
             // Draw the scene
             //__________________CONTENU DU DRAW "CLASSIQUE"_____________
 
-            mainGame.spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null); //SamplerState.PointClamp => Permet de resize du pixel art sans blur
+            mainGame.spriteBatch.Begin(sortMode: SpriteSortMode.Deferred, samplerState :SamplerState.PointClamp); //SamplerState.PointClamp => Permet de resize du pixel art sans blur
 
             snowMap.Draw(mainGame.spriteBatch);
 

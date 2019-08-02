@@ -51,7 +51,7 @@ namespace Engine
 
         public virtual void Load()
         {
-            renderTarget = new RenderTarget2D(mainGame.GraphicsDevice, 960 / zoom, 540 / zoom);//pas sûr de la taille à mettre (doublon de dans le Draw() ) //TODO lier avec la résolution de maingame
+            renderTarget = new RenderTarget2D(mainGame.GraphicsDevice, mainGame.graphics.PreferredBackBufferWidth / zoom, mainGame.graphics.PreferredBackBufferHeight / zoom);//pas sûr de la taille à mettre (doublon de dans le Draw() ) //TODO lier avec la résolution de maingame
 
             //windowWidth = mainGame.GraphicsDevice.DisplayMode.Width; //Attention, c'est la taille de l'écran, pas de la fenêtre
             //windowHeight = mainGame.GraphicsDevice.DisplayMode.Height;

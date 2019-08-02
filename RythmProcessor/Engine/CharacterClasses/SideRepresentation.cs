@@ -10,8 +10,37 @@ namespace Engine
 {
     public class SideRepresentation : ICollidable
     {
-        public AnimatedSprite idle, run, jump, fall;
-        public AnimatedSprite currentSprite;
+        public AnimatedSprite spriteIdle, spriteRun, spriteJump, spriteFall, spriteAttack1;
+        private State characterState;
+        public State CharacterState
+        {
+            get { return characterState; }
+            set { characterState = value;
+                CurrentSprite.CurrentPosition = Position;
+            }
+        }
+
+        public AnimatedSprite CurrentSprite
+        {
+            get
+            {
+                switch (CharacterState)
+                {
+                    case State.IDLE:
+                        return spriteIdle;
+                    case State.RUNNING:
+                        return spriteRun;
+                    case State.JUMPING:
+                        return spriteJump;
+                    case State.FALLING:
+                        return spriteFall;
+                    case State.ATTACKING1: // TODO overwrite pour player pour avoir plus d'attaques
+                        return spriteAttack1;
+                    default:
+                        throw new System.Exception();
+                }
+            }
+        }
 
         public Vector2 ConstantHitboxSize { get; set; }
         public Vector2 Position { get; set; }
@@ -31,7 +60,7 @@ namespace Engine
                 return new Rectangle((int)(Position.X - ConstantHitboxSize.X / 2), (int)(Position.Y - ConstantHitboxSize.Y),
             (int)ConstantHitboxSize.X, (int)ConstantHitboxSize.Y);
             }
-        } //penser à l'offset d'ancragevous
+        }
 
         public bool isOnGround { get; set; }
         public bool wasJumping { get; set; }
@@ -40,8 +69,21 @@ namespace Engine
         private int jumpsDone;
         public float JumpHeight { get; set; }
 
-        public bool HorizontalFlip { get; set; }
-        public bool Crossable { get; set; } //TODO
+        public bool HorizontalFlip {
+            get
+            {
+                if (CharacterFaces == Facing.LEFT)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            }
+        public bool Crossable { get; set; } 
+        public Facing CharacterFaces { get; private set; }
 
         // Constants for controlling vertical movement
         private const float GravityAcceleration = 0.5f;
@@ -66,7 +108,7 @@ namespace Engine
         {
 
 
-            currentSprite.Update(deltaTime);//avant ou après ApplyPhysics?
+            CurrentSprite.Update(deltaTime);//avant ou après ApplyPhysics?
             //Movement = Vector2.Zero;
             //this.deltaTime = deltaTime; //qu'est ce qui est le mieux entre stocker le dT ou le passer de méthode en méthode? 
             //if (playerInputs.Count > 0)
@@ -80,7 +122,7 @@ namespace Engine
 
             ApplyPhysics(playerInputs, deltaTime, levelActors);
 
-            currentSprite.CurrentPosition = Position;
+            CurrentSprite.CurrentPosition = Position;
 
             XMovement = 0;
 
@@ -175,6 +217,10 @@ namespace Engine
             //{
             //    MoveDown();
             //}
+            if (playerInputs.Count==0 && (characterState ==State.RUNNING))
+            {
+                CharacterState = State.IDLE;
+            }
 
         }
 
@@ -190,12 +236,30 @@ namespace Engine
 
         private void MoveRight()
         {
-            XMovement += 2; //TODO mettre en variable
+            if (CharacterState != State.ATTACKING1)
+            {
+                if (CharacterState == State.IDLE)
+                {
+                    CharacterState = State.RUNNING;
+                }
+                CharacterFaces = Facing.RIGHT;
+
+                XMovement += 2; //TODO mettre en variable
+            }
+            
         }
 
         private void MoveLeft()
         {
-            XMovement -= 2;
+            if (CharacterState != State.ATTACKING1)
+            {
+                if (CharacterState == State.IDLE)
+                {
+                    CharacterState = State.RUNNING;
+                }
+                CharacterFaces = Facing.LEFT;
+                XMovement -= 2;
+            }
         }
 
         public void Draw(SpriteBatch sb)
@@ -206,8 +270,23 @@ namespace Engine
             hitboxTexture.SetData(new[] { Color.Red });
             sb.Draw(hitboxTexture, HitBox, Color.White * 0.5f);
 #endif
-            currentSprite.Draw(sb, HorizontalFlip);
+            CurrentSprite.Draw(sb, HorizontalFlip);
 
+        }
+
+        public enum State
+        {
+            IDLE,
+            RUNNING,
+            JUMPING,
+            FALLING,
+            ATTACKING1
+
+        }
+        public enum Facing
+        {
+            RIGHT,
+            LEFT
         }
     }
 }

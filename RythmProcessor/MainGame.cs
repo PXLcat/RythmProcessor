@@ -87,7 +87,7 @@ namespace RythmProcessor
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            // Add your drawing code here
+
             if (gameState.CurrentScene != null)
             {
                 gameState.CurrentScene.Draw(gameTime);
