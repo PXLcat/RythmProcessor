@@ -12,7 +12,8 @@ namespace RythmProcessor.Engine
     {
         public BeatType type;
         public int BeatNumber { get; set; }
-        public float DistanceFromRightBorder { get; set; }
+        public int DistanceFromRightBorder { get; set; }
+        public decimal DecimalesDeplacement { get; set; }
         public bool Visible { get; set; }
 
         //méthode destroy des beat du tableau de int pour que le foreach passe plus dans le début du json?
@@ -30,7 +31,7 @@ namespace RythmProcessor.Engine
             this.type = type;
             this.BeatNumber = BeatNumber;
             DistanceFromRightBorder = 0;
-
+            DecimalesDeplacement = 0;
 
 
         }
@@ -42,8 +43,10 @@ namespace RythmProcessor.Engine
         {
         }
 
-        public void Update(int currentBeat, int bpm, int divisionDeTemps, float deltaTime, bool currentlyPlaying, int lineSize, int tempsDAvance)
+        public void Update(int currentBeat, int bpm, int divisionDeTemps, float deltaTime, bool currentlyPlaying, int lineSize, int tempsDAvance) 
         {
+            deltaTime /= 100;
+
             if (currentBeat > BeatNumber - divisionDeTemps * tempsDAvance)
             {
                 Visible = true;
@@ -51,15 +54,29 @@ namespace RythmProcessor.Engine
             else if (BeatNumber < currentBeat- divisionDeTemps)
             {
                 Visible = false;
-            }
+            } //ça devrait être ailleurs, 1 méthode pour 1 utilité
 
             if (Visible && currentlyPlaying)
             {
-                float distanceParDivision = lineSize / (divisionDeTemps * tempsDAvance);
-                float y = 15*100/ bpm; 
-                float vitesse = distanceParDivision / y;  //comment/par rapport à quoi la définir? sûrement par rapport au tempo
+                decimal distanceParTemps = lineSize / tempsDAvance;
+                float bPS = bpm / 60f;
+                decimal vitesse = distanceParTemps * (decimal)bPS;
 
-                DistanceFromRightBorder += vitesse * deltaTime;
+                decimal deplacement = vitesse * (decimal)deltaTime;
+
+                DecimalesDeplacement += deplacement - Math.Floor(deplacement);
+
+                while (DecimalesDeplacement>=1)
+                {
+                    DecimalesDeplacement -= 1;
+                    DistanceFromRightBorder += 1;
+                }
+
+                DistanceFromRightBorder += (int)Math.Floor(deplacement);
+                //DistanceFromRightBorder étant un nombre à virgule, on stocke les décimales pour ne pas causer de problème avec le nombre de pixels qui doit être en int
+
+                
+
             }
         }
 
@@ -86,6 +103,7 @@ namespace RythmProcessor.Engine
         {
             Visible = false;
             DistanceFromRightBorder = 0;
+            DecimalesDeplacement = 0;
         }
         
     }

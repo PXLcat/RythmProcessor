@@ -231,7 +231,7 @@ namespace Engine
 
             foreach (Beat b in musicManager.ManagedTimer.Beats)
             {
-                b.Update(musicManager.ManagedTimer.CurrentBeat, musicManager.ManagedTimer.BPM, musicManager.ManagedTimer.IntervalsByBPM, mainGame.deltaTime, playMusic, (mainGame.graphics.PreferredBackBufferWidth - (int)posBarreTemps.X) / 2, tempsDAvance);
+                b.Update(musicManager.ManagedTimer.CurrentBeat, musicManager.ManagedTimer.BPM, musicManager.ManagedTimer.IntervalsByBPM, mainGame.deltaTime, playMusic, (mainGame.graphics.PreferredBackBufferWidth/zoom - (int)posBarreTemps.X) , tempsDAvance);
             }
 
             if (showMissed)
