@@ -59,8 +59,8 @@ namespace RythmProcessor.Engine
             if (Visible && currentlyPlaying)
             {
                 decimal distanceParTemps = lineSize / tempsDAvance;
-                float bPS = bpm / 60f;
-                decimal vitesse = distanceParTemps * (decimal)bPS;
+                float bps = bpm / 60f;
+                decimal vitesse = distanceParTemps * (decimal)bps;
 
                 decimal deplacement = vitesse * (decimal)deltaTime;
 

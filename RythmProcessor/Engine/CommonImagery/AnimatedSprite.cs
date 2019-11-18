@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace Engine.CommonImagery
 {
@@ -22,7 +24,7 @@ namespace Engine.CommonImagery
         /// <summary>
         /// La vitesse (en nombre d'updates) à laquelle on va passer d'une frame à une autre
         /// </summary>
-        public int FrameSpeed { get; set; }
+        public int[] FrameSpeed { get; set; }
         public int CurrentFrame
         {
             get { return currentFrame; }
@@ -43,7 +45,7 @@ namespace Engine.CommonImagery
         /// </summary>
         private float compteurFrame;
 
-        public int FrameWidth, FrameHeight;//TODO : public pour pouvoir gérer les collisions, mettre un accesseur?
+        public int FrameWidth, FrameHeight;
 
         /// <summary>
         /// Centre d'une frame (autour duquel se font les rotations par ex.)
@@ -60,17 +62,48 @@ namespace Engine.CommonImagery
         /// <param name="columns">Nombre d'images du spritesheet</param>
         /// <param name="framespeed">La vitesse à laquelle on va passer d'une frame à une autre</param>
         public AnimatedSprite(Texture2D texture, Vector2 currentPosition, int columns, int rows,
-            Origin origin = Origin.LEFT_UP, int framespeed=4) : base(texture, currentPosition) 
+            Origin origin = Origin.LEFT_UP, int framespeed=4) : base(texture, currentPosition) //avec la lecture Json, le framespeed est de base mis à 0, donc on ne peut plus utiliser l'argument optionnel
         {
-
             Columns = columns;
             Rows = rows;
-            FrameSpeed = framespeed; //avec la lecture Json, le framespeed est de base mis à 0, donc on ne peut plus utiliser l'argument optionnel
+            
 
             CurrentFrame = 0;
             compteurFrame = 0;
             FrameWidth = Texture.Width / Columns;
             FrameHeight = Texture.Height/Rows;
+
+            if (File.Exists("./Content/"+Texture.Name+".json"))
+            {
+                JsonSerializerSettings settings = new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore, //attention dino danger
+                    MissingMemberHandling = MissingMemberHandling.Ignore
+                }; //TODO est ce qu'on aurait pas ça dans la Factory plutôt?
+
+                StreamReader sr = new StreamReader("./Content/Images" + Texture.Name + ".json"); //TODO mettre le chemin du fichier à part, si on veut un truc genre ./Content/Images/nomperso? ?
+                String jsonFile = sr.ReadToEnd();
+                AnimationJsonDTO animationJson = JsonConvert.DeserializeObject<AnimationJsonDTO>(jsonFile, settings);
+
+                FrameSpeed = new int[animationJson.Frames.Length];
+
+                for (int i = 0; i < animationJson.Frames.Length; i++)
+                {
+                    FrameSpeed[i] = animationJson.Frames[i].Duration;
+                }
+
+
+            }
+            else
+            {
+                FrameSpeed = new int[Columns*Rows];
+                for (int i = 0; i < Columns * Rows; i++)
+                {
+                    FrameSpeed[i] = 100;
+                }
+            }
+
+
 
             switch (origin)
             {
@@ -97,8 +130,8 @@ namespace Engine.CommonImagery
         /// </summary>
         public void Update(float deltaTime)
         {
-            compteurFrame += deltaTime;//demander à Gaët si ça marche 
-            if (compteurFrame >= FrameSpeed)
+            compteurFrame += deltaTime * 9; //nombre arbitraire pour que ça corresponde à peu près à du 100ms 
+            if (compteurFrame >= FrameSpeed[CurrentFrame])
             {
                 CurrentFrame++;
                 if (CurrentFrame == (Columns*Rows - 1))
@@ -133,4 +166,13 @@ namespace Engine.CommonImagery
             FirstLoopDone = false;
         }
     }
+    public class AnimationJsonDTO
+    {
+        public FrameDTO[] Frames { get; set; }
+    }
+    public class FrameDTO
+    {
+        public int Duration { get; set; }
+    }
+
 }
