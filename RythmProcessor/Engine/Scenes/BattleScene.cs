@@ -107,8 +107,8 @@ namespace Engine
             musicUnclicked = mainGame.Content.Load<Texture2D>("musicUnclicked");
             musicClicked = mainGame.Content.Load<Texture2D>("musicClicked");
 
-            greatAnimated = new AnimatedSprite(mainGame.Content.Load<Texture2D>("greatAnimated"), new Vector2(20, 80), 2, 7,framespeed:2);
-            missedAnimated = new AnimatedSprite(mainGame.Content.Load<Texture2D>("missedAnimated"), new Vector2(20, 80), 2, 4);
+            greatAnimated = new AnimatedSprite(mainGame.Content.Load<Texture2D>("greatAnimated"), new Vector2(20, 80), 2, 7, Factory.GenerateDefaultFrameDurations(14));
+            missedAnimated = new AnimatedSprite(mainGame.Content.Load<Texture2D>("missedAnimated"), new Vector2(20, 80), 2, 4,Factory.GenerateDefaultFrameDurations(8));
             #endregion
 
             payNoMind = mainGame.Content.Load<Song>("paynomind");
@@ -139,10 +139,10 @@ namespace Engine
             player.sideRepresentation = new SideRepresentation();
             player.sideRepresentation.spriteIdle = new AnimatedSprite(mainGame.Content.Load<Texture2D>("Images/ciale/ciale_side_idle"),
                 Vector2.Zero, //voir ce qu'on fout de cette position dans le constructeur pas focément utile
-                3, 2, Origin.MIDDLE_DOWN_ANCHORED,15);
+                3, 2, Factory.GenerateDefaultFrameDurations(6), Origin.MIDDLE_DOWN_ANCHORED);
             player.sideRepresentation.spriteRun = new AnimatedSprite(mainGame.Content.Load<Texture2D>("Images/ciale/ciale_side_run"),
                 Vector2.Zero, //voir ce qu'on fout de cette position dans le constructeur pas focément utile      
-                4, 3, Origin.MIDDLE_DOWN_ANCHORED, 8);
+                4, 3, Factory.GenerateDefaultFrameDurations(12), Origin.MIDDLE_DOWN_ANCHORED);
             player.sideRepresentation.Position = new Vector2(100, 100);
             player.sideRepresentation.ConstantHitboxSize = new Vector2(20, 68);
             ////Player : 

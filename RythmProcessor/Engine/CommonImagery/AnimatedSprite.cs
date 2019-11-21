@@ -14,36 +14,40 @@ namespace Engine.CommonImagery
     public class AnimatedSprite : DrawableImage
     {
         /// <summary>
-        /// Nombre de colonnes du spritesheet/de frames de l'animation. Compté à partir de 0.
+        /// Nombre de colonnes du spritesheet de l'animation. Compté à partir de 0.
         /// </summary>
-        public int Columns { get; set; }
+        private int columns { get; set; }
         /// <summary>
-        /// Nombre de lignes du spritesheet/de frames de l'animation. Compté à partir de 0.
+        /// Nombre de lignes du spritesheet de l'animation. Compté à partir de 0.
         /// </summary>
-        public int Rows { get; set; }
+        private int rows { get; set; }
         /// <summary>
-        /// La vitesse (en nombre d'updates) à laquelle on va passer d'une frame à une autre
+        /// Un tableau donc chaque entrée correspond à la durée d'affichage de chaque frame
         /// </summary>
-        public int[] FrameSpeed { get; set; }
+        private int[] framesSpeed { get; set; }
         public int CurrentFrame
         {
             get { return currentFrame; }
             set
             {
-                if ((value < 0) || (value > Columns*Rows))
+                if ((value < 0) || (value > columns*rows))
                     throw new Exception("Not a valid frame number for this sprite");
                 else
                     currentFrame = value;
             }
         }
         /// <summary>
+        /// Le timerFrame augmente à chaque Update. Lorsqu'il atteint la valeur de la durée de la frame, on passe à la frame (currentFrame) suivante.
+        /// </summary>
+        private float timerFrame;
+        /// <summary>
+        /// La frame de l'animation actuelle
+        /// </summary>
+        private int currentFrame;
+        /// <summary>
         /// Sert à savoir, dans le cas d'une action qui ne boucle pas (ex: attaque), si l'animation a fini de s'afficher.
         /// </summary>
         public bool FirstLoopDone;
-        /// <summary>
-        /// Le compteurFrame augmente de 1 à chaque Update. Lorsqu'il atteint la valeur du FrameSpeed, on passe à la frame (currentFrame) suivante.
-        /// </summary>
-        private float compteurFrame;
 
         public int FrameWidth, FrameHeight;
 
@@ -52,7 +56,6 @@ namespace Engine.CommonImagery
         /// </summary>
         public Vector2 center;
 
-        private int currentFrame;
 
         /// <summary>
         /// Constructeur de AnimatedSprite. Par défaut, l'origine du sprite sera en haut à droite de l'image.
@@ -60,49 +63,19 @@ namespace Engine.CommonImagery
         /// <param name="texture"></param>
         /// <param name="currentPosition"></param>
         /// <param name="columns">Nombre d'images du spritesheet</param>
-        /// <param name="framespeed">La vitesse à laquelle on va passer d'une frame à une autre</param>
-        public AnimatedSprite(Texture2D texture, Vector2 currentPosition, int columns, int rows,
-            Origin origin = Origin.LEFT_UP, int framespeed=4) : base(texture, currentPosition) //avec la lecture Json, le framespeed est de base mis à 0, donc on ne peut plus utiliser l'argument optionnel
+        /// <param name="framespeed">La vitesse à laquelle on va passer d'une frame à une autre</param> //TODO on devrait récup direct le tableau et mettre GenerateFrameDurations dans la Factory
+        public AnimatedSprite(Texture2D texture, Vector2 currentPosition, int columns, int rows, int[] framesSpeed, 
+            Origin origin = Origin.LEFT_UP) : base(texture, currentPosition) //avec la lecture Json, le framespeed est de base mis à 0, donc on ne peut plus utiliser l'argument optionnel
         {
-            Columns = columns;
-            Rows = rows;
+            this.columns = columns;
+            this.rows = rows;
+            this.framesSpeed = framesSpeed;
             
 
             CurrentFrame = 0;
-            compteurFrame = 0;
-            FrameWidth = Texture.Width / Columns;
-            FrameHeight = Texture.Height/Rows;
-
-            if (File.Exists("./Content/"+Texture.Name+".json"))
-            {
-                JsonSerializerSettings settings = new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore, //attention dino danger
-                    MissingMemberHandling = MissingMemberHandling.Ignore
-                }; //TODO est ce qu'on aurait pas ça dans la Factory plutôt?
-
-                StreamReader sr = new StreamReader("./Content/Images" + Texture.Name + ".json"); //TODO mettre le chemin du fichier à part, si on veut un truc genre ./Content/Images/nomperso? ?
-                String jsonFile = sr.ReadToEnd();
-                AnimationJsonDTO animationJson = JsonConvert.DeserializeObject<AnimationJsonDTO>(jsonFile, settings);
-
-                FrameSpeed = new int[animationJson.Frames.Length];
-
-                for (int i = 0; i < animationJson.Frames.Length; i++)
-                {
-                    FrameSpeed[i] = animationJson.Frames[i].Duration;
-                }
-
-
-            }
-            else
-            {
-                FrameSpeed = new int[Columns*Rows];
-                for (int i = 0; i < Columns * Rows; i++)
-                {
-                    FrameSpeed[i] = 100;
-                }
-            }
-
+            timerFrame = 0;
+            FrameWidth = Texture.Width / this.columns;
+            FrameHeight = Texture.Height / this.rows;
 
 
             switch (origin)
@@ -130,27 +103,27 @@ namespace Engine.CommonImagery
         /// </summary>
         public void Update(float deltaTime)
         {
-            compteurFrame += deltaTime * 9; //nombre arbitraire pour que ça corresponde à peu près à du 100ms 
-            if (compteurFrame >= FrameSpeed[CurrentFrame])
+            timerFrame += deltaTime * 9; //nombre arbitraire pour que ça corresponde à peu près à du 100ms 
+            if (timerFrame >= framesSpeed[CurrentFrame])
             {
                 CurrentFrame++;
-                if (CurrentFrame == (Columns*Rows - 1))
+                if (CurrentFrame == (columns*rows - 1))
                 {
                     FirstLoopDone = true;
                 }
-                else if (CurrentFrame == Columns * Rows)
+                else if (CurrentFrame == columns * rows)
                 {
                     CurrentFrame = 0;
 
                 }
-                compteurFrame = 0;
+                timerFrame = 0;
             }
         }
         public override void Draw(SpriteBatch sb, bool horizontalFlip = false)
         {
 
             
-            Rectangle sourceRectangle = new Rectangle((CurrentFrame % Columns)* FrameWidth, (int)Math.Floor((double)CurrentFrame / Columns) *FrameHeight, FrameWidth, FrameHeight);
+            Rectangle sourceRectangle = new Rectangle((CurrentFrame % columns)* FrameWidth, (int)Math.Floor((double)CurrentFrame / columns) *FrameHeight, FrameWidth, FrameHeight);
             //Debug.WriteLine("Current Frame: " + CurrentFrame + " nbColumns: " + Columns);
 
             if (horizontalFlip)
@@ -162,17 +135,9 @@ namespace Engine.CommonImagery
         public void BackToFirstFrame()
         {
             CurrentFrame = 0;
-            compteurFrame = 0;
+            timerFrame = 0;
             FirstLoopDone = false;
         }
-    }
-    public class AnimationJsonDTO
-    {
-        public FrameDTO[] Frames { get; set; }
-    }
-    public class FrameDTO
-    {
-        public int Duration { get; set; }
     }
 
 }

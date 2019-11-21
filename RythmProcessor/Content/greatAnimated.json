@@ -1,0 +1,136 @@
+{ "frames": [
+   {
+    "filename": "greatAnimated 0.ase",
+    "frame": { "x": 0, "y": 0, "w": 132, "h": 33 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 132, "h": 33 },
+    "sourceSize": { "w": 132, "h": 33 },
+    "duration": 40
+   },
+   {
+    "filename": "greatAnimated 1.ase",
+    "frame": { "x": 0, "y": 33, "w": 132, "h": 33 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 132, "h": 33 },
+    "sourceSize": { "w": 132, "h": 33 },
+    "duration": 40
+   },
+   {
+    "filename": "greatAnimated 2.ase",
+    "frame": { "x": 0, "y": 66, "w": 132, "h": 33 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 132, "h": 33 },
+    "sourceSize": { "w": 132, "h": 33 },
+    "duration": 40
+   },
+   {
+    "filename": "greatAnimated 3.ase",
+    "frame": { "x": 0, "y": 99, "w": 132, "h": 33 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 132, "h": 33 },
+    "sourceSize": { "w": 132, "h": 33 },
+    "duration": 40
+   },
+   {
+    "filename": "greatAnimated 4.ase",
+    "frame": { "x": 0, "y": 132, "w": 132, "h": 33 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 132, "h": 33 },
+    "sourceSize": { "w": 132, "h": 33 },
+    "duration": 40
+   },
+   {
+    "filename": "greatAnimated 5.ase",
+    "frame": { "x": 0, "y": 165, "w": 132, "h": 33 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 132, "h": 33 },
+    "sourceSize": { "w": 132, "h": 33 },
+    "duration": 40
+   },
+   {
+    "filename": "greatAnimated 6.ase",
+    "frame": { "x": 0, "y": 198, "w": 132, "h": 33 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 132, "h": 33 },
+    "sourceSize": { "w": 132, "h": 33 },
+    "duration": 40
+   },
+   {
+    "filename": "greatAnimated 7.ase",
+    "frame": { "x": 0, "y": 231, "w": 132, "h": 33 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 132, "h": 33 },
+    "sourceSize": { "w": 132, "h": 33 },
+    "duration": 40
+   },
+   {
+    "filename": "greatAnimated 8.ase",
+    "frame": { "x": 0, "y": 264, "w": 132, "h": 33 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 132, "h": 33 },
+    "sourceSize": { "w": 132, "h": 33 },
+    "duration": 40
+   },
+   {
+    "filename": "greatAnimated 9.ase",
+    "frame": { "x": 0, "y": 297, "w": 132, "h": 33 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 132, "h": 33 },
+    "sourceSize": { "w": 132, "h": 33 },
+    "duration": 40
+   },
+   {
+    "filename": "greatAnimated 10.ase",
+    "frame": { "x": 0, "y": 330, "w": 132, "h": 33 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 132, "h": 33 },
+    "sourceSize": { "w": 132, "h": 33 },
+    "duration": 40
+   },
+   {
+    "filename": "greatAnimated 11.ase",
+    "frame": { "x": 0, "y": 363, "w": 132, "h": 33 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 132, "h": 33 },
+    "sourceSize": { "w": 132, "h": 33 },
+    "duration": 40
+   },
+   {
+    "filename": "greatAnimated 12.ase",
+    "frame": { "x": 0, "y": 396, "w": 132, "h": 33 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 132, "h": 33 },
+    "sourceSize": { "w": 132, "h": 33 },
+    "duration": 40
+   },
+   {
+    "filename": "greatAnimated 13.ase",
+    "frame": { "x": 0, "y": 429, "w": 132, "h": 33 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 132, "h": 33 },
+    "sourceSize": { "w": 132, "h": 33 },
+    "duration": 40
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.12.1-x64",
+  "format": "I8",
+  "size": { "w": 240, "h": 462 },
+  "scale": "1"
+ }
+}

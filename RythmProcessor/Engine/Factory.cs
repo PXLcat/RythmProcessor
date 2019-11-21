@@ -18,7 +18,7 @@ namespace Engine
     {
         private static Factory instance = null;
         public MainGame mG;
-        
+
 
         public static Factory Instance
         {
@@ -42,6 +42,9 @@ namespace Engine
         private Factory()
         {
         }
+        //LoadMapRepresentation(nom perso)
+        //LoadSideRepresentation(nom perso)
+        //LoadSideInterface
 
         //public void LoadPlayer()
         //{
@@ -61,7 +64,11 @@ namespace Engine
         //    //Player.Instance.currentCharacter = monsieurBloc;
         //}
 
-
+        public AnimatedSprite LoadGreat()
+        {
+            AnimatedSprite greatAnimated = new AnimatedSprite(mG.Content.Load<Texture2D>("greatAnimated"), new Vector2(20, 80), 2, 7, Factory.GenerateDefaultFrameDurations(14));
+            return greatAnimated;
+        }
 
 
         private void JsonToPlayerCharacters(CharactersListDTO characterList) //TODO: attention à la possibilité de champs vides. Faire des vérifs pour
@@ -86,37 +93,45 @@ namespace Engine
                         spriteIdle = String.IsNullOrEmpty(characterDTO.SideRepresentation.Idle.ImgFile) ? null :
                         new AnimatedSprite(mG.Content.Load<Texture2D>("Images/" + characterDTO.Name + "/" + characterDTO.SideRepresentation.Idle.ImgFile),
                         Vector2.Zero, //voir ce qu'on fout de cette position dans le constructeur pas focément utile
-                        characterDTO.SideRepresentation.Idle.Columns, characterDTO.SideRepresentation.Idle.FrameSpeed),
+                        characterDTO.SideRepresentation.Idle.Columns, characterDTO.SideRepresentation.Idle.Rows, 
+                        GenerateFrameDurationsFromDTO(characterDTO.SideRepresentation.Idle)),
+
                         spriteRun = String.IsNullOrEmpty(characterDTO.SideRepresentation.Run.ImgFile) ? null :
                         new AnimatedSprite(mG.Content.Load<Texture2D>("Images/" + characterDTO.Name + "/" + characterDTO.SideRepresentation.Run.ImgFile),
                         Vector2.Zero,
-                        characterDTO.SideRepresentation.Idle.Columns, characterDTO.SideRepresentation.Run.FrameSpeed),
+                        characterDTO.SideRepresentation.Idle.Columns, characterDTO.SideRepresentation.Idle.Rows,
+                        GenerateFrameDurationsFromDTO(characterDTO.SideRepresentation.Run)),
+
+
                         spriteJump = String.IsNullOrEmpty(characterDTO.SideRepresentation.Jump.ImgFile) ? null :
                         new AnimatedSprite(mG.Content.Load<Texture2D>("Images/" + characterDTO.Name + "/" + characterDTO.SideRepresentation.Jump.ImgFile),
                         Vector2.Zero,
-                        characterDTO.SideRepresentation.Idle.Columns, characterDTO.SideRepresentation.Jump.FrameSpeed),
+                        characterDTO.SideRepresentation.Idle.Columns, characterDTO.SideRepresentation.Idle.Rows,
+                        GenerateFrameDurationsFromDTO(characterDTO.SideRepresentation.Jump)),
+
                         spriteFall = String.IsNullOrEmpty(characterDTO.SideRepresentation.Fall.ImgFile) ? null :
                         new AnimatedSprite(mG.Content.Load<Texture2D>("Images/" + characterDTO.Name + "/" + characterDTO.SideRepresentation.Fall.ImgFile),
                         Vector2.Zero,
-                        characterDTO.SideRepresentation.Idle.Columns, characterDTO.SideRepresentation.Fall.FrameSpeed),
+                        characterDTO.SideRepresentation.Idle.Columns, characterDTO.SideRepresentation.Idle.Columns,
+                        GenerateFrameDurationsFromDTO(characterDTO.SideRepresentation.Fall)),
 
                     },
-                    mapRepresentation = characterDTO.MapRepresentation == null ? null :
-                    new MapRepresentation
-                    { //C'est défini dans le json mais pas présent dans le Content et inutile pour ce projet, donc je commente
-                        idle_front = String.IsNullOrEmpty(characterDTO.MapRepresentation.Idle_front.ImgFile) ? null :
-                        new AnimatedSprite(mG.Content.Load<Texture2D>("Images/" + characterDTO.MapRepresentation.Idle_front.ImgFile),
-                        Vector2.Zero,
-                        characterDTO.MapRepresentation.Idle_front.Columns, characterDTO.MapRepresentation.Idle_front.FrameSpeed),
-                        idle_back = String.IsNullOrEmpty(characterDTO.MapRepresentation.Idle_back.ImgFile) ? null :
-                        new AnimatedSprite(mG.Content.Load<Texture2D>("Images/" + characterDTO.MapRepresentation.Idle_back.ImgFile),
-                        Vector2.Zero,
-                        characterDTO.MapRepresentation.Idle_back.Columns, characterDTO.MapRepresentation.Idle_back.FrameSpeed),
-                        run = String.IsNullOrEmpty(characterDTO.MapRepresentation.Run.ImgFile) ? null :
-                        new AnimatedSprite(mG.Content.Load<Texture2D>("Images/" + characterDTO.MapRepresentation.Run.ImgFile),
-                        Vector2.Zero,
-                        characterDTO.MapRepresentation.Run.Columns, characterDTO.MapRepresentation.Run.FrameSpeed),
-                    }
+                    //mapRepresentation = characterDTO.MapRepresentation == null ? null :
+                    //new MapRepresentation
+                    //{ //C'est défini dans le json mais pas présent dans le Content et inutile pour ce projet, donc je commente
+                    //    idle_front = String.IsNullOrEmpty(characterDTO.MapRepresentation.Idle_front.ImgFile) ? null :
+                    //    new AnimatedSprite(mG.Content.Load<Texture2D>("Images/" + characterDTO.MapRepresentation.Idle_front.ImgFile),
+                    //    Vector2.Zero,
+                    //    characterDTO.MapRepresentation.Idle_front.Columns, characterDTO.MapRepresentation.Idle_front.FrameSpeed),
+                    //    idle_back = String.IsNullOrEmpty(characterDTO.MapRepresentation.Idle_back.ImgFile) ? null :
+                    //    new AnimatedSprite(mG.Content.Load<Texture2D>("Images/" + characterDTO.MapRepresentation.Idle_back.ImgFile),
+                    //    Vector2.Zero,
+                    //    characterDTO.MapRepresentation.Idle_back.Columns, characterDTO.MapRepresentation.Idle_back.FrameSpeed),
+                    //    run = String.IsNullOrEmpty(characterDTO.MapRepresentation.Run.ImgFile) ? null :
+                    //    new AnimatedSprite(mG.Content.Load<Texture2D>("Images/" + characterDTO.MapRepresentation.Run.ImgFile),
+                    //    Vector2.Zero,
+                    //    characterDTO.MapRepresentation.Run.Columns, characterDTO.MapRepresentation.Run.FrameSpeed),
+                    //}
 
                 };
 
@@ -130,7 +145,48 @@ namespace Engine
         public void Load() {
             Fonts.Instance.Load(mG);
         }
-        
+
+        private int[] GenerateFrameDurationsFromDTO(SpriteStateDTO spriteStateDTO)
+        {
+            int[] framesSpeed;
+
+            if (File.Exists("./Content/" + spriteStateDTO.ImgFile + ".json"))
+            {
+                JsonSerializerSettings settings = new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore, //attention dino danger
+                    MissingMemberHandling = MissingMemberHandling.Ignore
+                }; //TODO est ce qu'on aurait pas ça dans la Factory plutôt?
+
+                StreamReader sr = new StreamReader("./Content/Images" + spriteStateDTO.ImgFile + ".json"); //TODO mettre le chemin du fichier à part, si on veut un truc genre ./Content/Images/nomperso? ?
+                String jsonFile = sr.ReadToEnd();
+                AnimationJsonDTO animationJson = JsonConvert.DeserializeObject<AnimationJsonDTO>(jsonFile, settings);
+
+                framesSpeed = new int[animationJson.Frames.Length];
+
+                for (int i = 0; i < animationJson.Frames.Length; i++)
+                {
+                    framesSpeed[i] = animationJson.Frames[i].Duration;
+                }
+
+
+            }
+            else
+            {
+                framesSpeed = GenerateDefaultFrameDurations(spriteStateDTO.Rows * spriteStateDTO.Columns);
+            }
+
+            return framesSpeed;
+        }
+        public static int[] GenerateDefaultFrameDurations(int frameCount)
+        {
+            int[] framesSpeed = new int[frameCount];
+            for (int i = 0; i < frameCount; i++)
+            {
+                framesSpeed[i] = 100;
+            }
+            return framesSpeed;
+        }
     }
 
 }

@@ -41,6 +41,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Engine\CommonImagery\AnimationJsonDTO.cs" />
     <Compile Include="Engine\MusicManager.cs" />
     <Compile Include="Engine\Scenes\BattleScene.cs" />
     <Compile Include="Engine\Beat.cs" />
@@ -101,6 +102,7 @@
     <None Include="Content\charactersList.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Content\greatAnimated.json" />
     <None Include="Content\testpnm.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

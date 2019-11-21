@@ -40,6 +40,7 @@ namespace Engine.CharacterClasses
     {
         public String ImgFile { get; set; }
         public int Columns { get; set; }
+        public int Rows { get; set; }
         public int FrameSpeed { get; set; }
     }
 }
