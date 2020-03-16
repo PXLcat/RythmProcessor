@@ -13,6 +13,7 @@ namespace Engine
         public int CurrentTick { get; set; }
 
         private Stopwatch watch;
+        Thread myThread;
 
         public event EventHandler<TickEventArgs> Tick;
 
@@ -25,9 +26,35 @@ namespace Engine
         public void Start()
         {
             watch = Stopwatch.StartNew();
-            Thread myThread = new Thread(new ThreadStart(CountTime));
+            myThread = new Thread(new ThreadStart(CountTime));
             myThread.Start();
             //TODO myThread.Suspend
+        }
+
+        public void Stop()
+        {
+            watch.Stop();
+            if (myThread.ThreadState == System.Threading.ThreadState.Suspended)
+            {
+                myThread.Resume();//sale de le redémarrer avant de l'arrêter
+            }
+            myThread.Abort();//TODO prendre un truc pas obsolète
+
+            CurrentTick = 0;
+        }
+
+        public void Pause()
+        {
+            watch.Stop();
+            if (myThread.ThreadState == System.Threading.ThreadState.Running)
+            {
+                myThread.Suspend();//TODO prendre un truc pas obsolète
+            }
+        }
+        public void Resume()
+        {
+            watch.Start();
+            myThread.Resume();
         }
 
         private void CountTime()
@@ -43,10 +70,6 @@ namespace Engine
             }
         }
 
-        public void Stop()
-        {
-            watch.Reset();
-        }
 
 
 

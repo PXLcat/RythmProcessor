@@ -98,18 +98,20 @@ namespace Engine
             if (MediaPlayer.State == MediaState.Paused)
             {
                 MediaPlayer.Resume();
+                ManagedTimer.BPMTimer.Resume();
             }
             else
             {
                 MediaPlayer.Play(CurrentSong);
+                ManagedTimer.BPMTimer.Start();
             }
 
-            ManagedTimer.BPMTimer.Start();
+            
         }
         public void Pause()
         {
             MediaPlayer.Pause();
-            ManagedTimer.BPMTimer.Stop(); //TODO attention c'est peut être ça qui décale : le BPMtimer et le timer qu'il contient se désynhronisent
+            ManagedTimer.BPMTimer.Pause(); //TODO attention c'est peut être ça qui décale : le BPMtimer et le timer qu'il contient se désynhronisent
         }
         public void Stop()
         {
