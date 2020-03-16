@@ -188,11 +188,11 @@ namespace Engine
                     {
                         this.Position = new Vector2(actor.HitBox.Right + (this.HitBox.Width / 2), Position.Y);
                     }
-                    Debug.Write("collision");
+
                     nombreDObstaclesCroises++;
                 }
             }
-            Debug.Write(nombreDObstaclesCroises);
+            //Debug.Write(nombreDObstaclesCroises);
         }
 
         private void SortAndExecuteInput(List<InputType> playerInputs, float deltaTime)

@@ -44,7 +44,6 @@ namespace Engine.CharacterClasses
 
         public void Update(List<InputType> inputs,float deltatime, List<ICollidable> levelActors) {
             //mapRepresentation.CurrentPosition = 
-            Debug.Write("test");
             //TODO ajouter un champ currentRepresentation au Gamestate pour savoir quelle représentation updater
             sideRepresentation.Update(inputs, deltatime, levelActors);
         }

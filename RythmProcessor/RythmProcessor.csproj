@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Engine\CommonImagery\AnimationJsonDTO.cs" />
+    <Compile Include="Engine\CustomTimer.cs" />
     <Compile Include="Engine\MusicManager.cs" />
     <Compile Include="Engine\Scenes\BattleScene.cs" />
     <Compile Include="Engine\Beat.cs" />

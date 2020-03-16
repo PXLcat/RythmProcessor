@@ -109,7 +109,7 @@ namespace Engine
         public void Pause()
         {
             MediaPlayer.Pause();
-            ManagedTimer.BPMTimer.Stop();
+            ManagedTimer.BPMTimer.Stop(); //TODO attention c'est peut être ça qui décale : le BPMtimer et le timer qu'il contient se désynhronisent
         }
         public void Stop()
         {

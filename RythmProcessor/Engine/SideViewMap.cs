@@ -69,7 +69,7 @@ namespace Engine
                     throw new Exception("Erreur dans le nommage du layer " + sideSnowMap.Layers[i].Name +
                         ". Le nom doit commencer par deux chiffres indiquant la hauteur du layer.");
                 }
-                Debug.WriteLine(sideSnowMap.Layers[i].Name + " " + layerZ);
+                //Debug.WriteLine(sideSnowMap.Layers[i].Name + " " + layerZ);
 
                 //C'est ici qu'on initialise les tiles
 

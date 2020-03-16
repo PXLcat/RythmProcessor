@@ -20,7 +20,8 @@ namespace Engine
         public int BPM { get; set; }
         public int IntervalsByBPM { get; set; }
         public List<Beat> Beats { get; set; }
-        public Timer BPMTimer { get; set; }
+        //public Timer BPMTimer { get; set; }
+        public CustomTimer BPMTimer { get; set; }
         #endregion
 
         //public void Load() L'initialisation se fera dans le ctor
@@ -36,8 +37,14 @@ namespace Engine
             Beats = beats;
             CurrentBeat = 0;
 
-            BPMTimer = new Timer(60000 / bpm / intervalsByBPM);
-            BPMTimer.Elapsed += OnTimedEvent;
+
+            double timer = (double)60000 / (double)bpm / (double)intervalsByBPM;
+            //BPMTimer = new Timer(timer);
+            //BPMTimer.Elapsed += OnTimedEvent;
+
+            BPMTimer = new CustomTimer(timer);
+            BPMTimer.Tick += OnTimedEvent;
+
         }
 
         public void Unload()
@@ -52,7 +59,7 @@ namespace Engine
         {
         }
 
-        private void OnTimedEvent(Object source, ElapsedEventArgs e)
+        private void OnTimedEvent(Object source, CustomTimer.TickEventArgs e)
         {
             CurrentBeat++;
         }
